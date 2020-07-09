@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UTF8_Encoding</title>
+    <!-- <script src="UTF8_Encoding.js"></script> -->
+</head>
+<body>
+    <script>
+        // var buffer = new ArrayBuffer(32);
+        // var dataView = new DataView(buffer);
+        // console.log(`dataView.getUint8:${dataView.getUint8(0)},byteLength:${buffer.byteLength}`);
+        // var x1 = new Int32Array(buffer);
+        // x1[0] = 1;
+        // // alert(x1[0])
+        // if(buffer.byteLength === 32){
+        //     var newBuffer = buffer.slice(0, 3);
+
+        //     console.log("fail")
+        // }
+
+        // let buffer = new ArrayBuffer(16);
+        // let int32View = new Int32Array(buffer);
+
+        // for (var i = 0; i < int32View.length; i++) {
+        //     int32View[i] = i * 2;
+        // }
+        // var int16View = new Int16Array(buffer);
+
+        // for (var i = 0; i < int16View.length; i++) {
+        // console.log("Entry " + i + ": " + int16View[i]);
+        // }
+        // 字符串转为ArrayBuffer对象，参数为字符串
+        function UTF8_Encoding(string){
+            // 每个字符占用2个字节
+            let strLen = string.length;
+            let buf = new ArrayBuffer(strLen * 2);
+            let bufView = new Uint8Array(buf);
+            let c =encodeURIComponent(string);
+            for(let i = 0; i < strLen; i++){
+                c = string.charCodeAt(i);
+                if(c >= 0x010000 && c <= 0x10FFFF) {  
+                    
+                } else if(c >= 0x000800 && c <= 0x00FFFF) {  
+                  
+                } else if(c >= 0x000080 && c <= 0x0007FF) {  
+                  
+                } else {  
+                   
+                }  
+                // console.log(string.charCodeAt(i));
+            }
+            return bufView;
+
+        }
+    //    console.log(UTF8_Encoding("as"));
+            console.log(UTF8_Encoding("中国"));
+
+
+
+    </script>
+</body>
+</html>
