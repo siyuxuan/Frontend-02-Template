@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>预处理(pre-process)</title>
+</head>
+<body>
+    <script>
+        var a = 2;
+        void function(){
+            a =1;
+            return;
+            var a;
+        }();
+        console.log(`a=${a}`);
+/*
+     // Uncaught SyntaxError: Missing initializer in const declaration
+        var a1 = 2;
+        void function(){
+            a1 =1;
+            return;
+            const a1;
+        }();
+        console.log(`a1=${a1}`); 
+*/
+        var a1 = 2;
+        try{void function(){
+            a1 =1;
+            return;
+            const a1=3;
+        }() }catch(e){
+               console.log(e);
+             
+           };
+           console.log(`a1=${a1}`); 
+
+       
+    </script>
+</body>
+</html>
