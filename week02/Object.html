@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>狗咬人</title>
+</head>
+<body>
+    <script>
+        class Animate{  
+            constructor(){
+
+            }
+        
+
+        }
+        class Human extends Animate {
+            constructor(health){
+                super();
+                this.health = health;
+            }
+            getHealth(){
+                console.log(`getter health:${this.health}`);
+                return this.health;
+            }
+            setHealth(health){
+                this.health = health;
+                console.log(`getter health:${this.health}`);
+                return  this.health;
+            }
+
+            hurt(damage){
+                this.health -=damage;
+                // alert("我被狗咬了");
+                console.log(`我被狗咬了，受到的伤害值为：${damage}点。`)
+            }
+        }
+        class Dog extends Animate{
+            constructor(damage){
+                super();
+                this.damage = damage;
+            }
+        
+
+            getDamage(){
+                console.log(`getter damage:${this.damage}`);
+                return this.damage;
+                
+            }
+            setDamage(damage){
+                this.damage = damage;
+                console.log(`getter damage:${this.damage}`);
+                 return this.damage;
+            }
+
+            bite(){
+                return this.damage;
+            }
+
+
+
+        }
+
+        var person = new Human(100);
+        var dog = new Dog(20);
+        // 狗咬人
+        var dogDramge = dog.bite();
+        dog.getDamage();
+        person.hurt(dogDramge);
+        // person.getHealth();
+    </script>
+</body>
+</html>

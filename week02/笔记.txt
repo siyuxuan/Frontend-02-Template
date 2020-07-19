@@ -1,0 +1,255 @@
+week02 学习笔记
+
+
+<Number> = "0" | "1" | "2" .....| "9"
+<DecimalNumber> = "0" | (("1" | "2" .....| "9") <Number>* ) 
+括号
+ 
+BNF:
+<AdditiveExpression> = <DecimalNumber> | <AdditiveExpression> "+" <DecimalNumber> 
+
+产生式
+四则运算
+ 1+ 2 * 3 
+
+终结符
+    Number
+    + - * /
+非终结符
+    MultiplicativeExpression
+    AdditiveExpression
+
+括号
+<PrimaryExpression> = <DecimalNumber> |
+                        "(" <LogicalExpress> ")"
+
++ -
+<AdditiveExpression> = <PrimaryExpression> | 
+                      <AdditiveExpression> "+" <PrimaryExpression> | 
+                      <AdditiveExpression> "-" <PrimaryExpression> 
+                      
+* /
+<MultiplicativeExpression> = <DecimalNumber> | 
+                        <MultiplicativeExpression> "*" <DecimalNumber> |
+                        <MultiplicativeExpression> "/" <DecimalNumber>
+
+
+  <LogicalExpress> = <DecimalNumber> | 
+                     <LogicalExpress> "||" <AdditiveExpression> | 
+                     <LogicalExpress> "&&" <AdditiveExpression>
+
+
+通过产生式理解乔姆斯基谱系
+
+ 0型无限制文法
+    ？:: =?  <a> <b> ::= "c" <d>
+  
+ 1型上下文相关法 VB JavaScript Python 
+    ?<A> ?::=? <B> ?  <a> <b> <c> ::= <a> "c" <b> 只有中间那个可以变
+     "'''四则运算\n" <LogicalExpress> "'''" = "'''四则运算" (  <LogicalExpress> = <DecimalNumber> | 
+                                                            <LogicalExpress> "||" <AdditiveExpression> | 
+                                                            <LogicalExpress> "&&" <AdditiveExpression>) "'''" 
+  
+
+
+ 2型上下文无关法             
+<A>::=?
+
+
+ 3型正则文法（表达式）
+    <A>::=<A>?
+    <A>::=?<A> 不正确
+
+    <DecimalNumber> = "0" | (("1" | "2" .....| "9") <Number>* ) 
+    10进制整数
+    <DecimalNumber> = /0|[1-9][0-9]*/
+
+    {
+        get a{ return1},
+        get:1
+    }
+    属于1型文法
+
+    2** 1**1 2型文法
+
+    图灵完备性 
+        命令式 -图灵机
+            goto
+            if和while
+        声明式 -lambda
+            递归
+
+    动态与静态
+        动态：
+            在用户的设备/在线上服务器上
+            产品运行时
+            Runtime
+        静态
+            在程序员的设备上
+            产品开发时
+            Compiletime
+    类型系统
+        动态类型系统与静态类型系统
+        强类型与弱类型
+            String + Number 
+            String == Boolean
+        复合类型
+            结构体  {a:T1,b:T2}
+            函数签名 (T1,T2) =>T3
+        子类型(C++) 
+        泛型      把类型到做参数一样的东西传递给我们某段代码结构   凡是能用Array<Parent> 的地方都能用Array<Child>  凡是能用Funtion<Child> 的地方都能用Funtion<Parent> 
+            逆变与协变
+
+语言的分类
+形式语言-用途
+    数据描述语言 JSON 、HTML、XAML、SQL、CSS 
+    编程语言    C++、C、Java、C#、Python、Ruby、Perl、Lisp、T-SQL、Clojure、Haskel、JavaScript
+形式语言 -表达方式
+    声明式语言  JSON 、HTML、XAML、SQL、CSS 、Lisp、Clojure、Haskel
+    命令型语言  C++、C、Java、C#、Python、Ruby、Perl、T-SQL、JavaScript
+
+一般命令式编程语言的设计方式
+
+Atom(原子级) 最小的组成单位  通常包含关键字 直接量 变量名一些基本的单位称为原子
+    Indetifier 变量名
+    Literal 直接量 数字直接量和字符串直接量
+Expression（表达式） 原子级的结构通过运算符相连接，加上一些辅助的符号，构成表达式，通常是一个可以级联的结构
+    Atom 原子
+    Operator 运算符 （javascript为例）
+        算数运算符 + - * / % ++ --
+        赋值运算符 = += -+ *= /= %=
+        比较运算符 == === != !== > < >= <= ?
+        逻辑运算符  && || !
+        类型运算符 typeof(返回变量的类型) instanceof(返回 true，如果对象是对象类型的实例。)
+        位运算符   & | ~(非) ^(异或) <<(零填充左位移) >>(有符号右位移)  >>> (零填充右位移)
+    Punctuator 特定的符号
+
+Statement语句  if while for 语句
+    Expression
+    Keyworld
+    Punctuator
+
+Structure结构化
+    Function 
+    Class
+    Process 线程
+    Namespace （c++）
+
+Program工程 npm
+    Promgram
+    Module
+    Package
+    Library
+
+JS类型
+    Atom原子
+        Grammer语法 
+            Literal 字面值 1.2 2.1  对应 运行时中 七种基本类型
+            Variable 变量        对应的运行时 Execution Context存储的变化
+            Keywords 关键字 if else  
+            Whitespace 空白符
+            Line Terminator 换行符
+
+        Runtime运行时
+            Types 
+                Number ：在 JavaScript 中, Number 是一种 定义为 64位双精度浮点型（double-precision 64-bit floating point format） (IEEE 754)的数字数据类型
+                    Sign(1) 符号 - +
+                    Exponent(11) 指数 浮点数表示的范围
+                    Fraction(52) 有效位数 决定浮点数表示的范围有效位数的精度
+                    Number Grammer语法
+                        DecimalNumber 十进制
+                            0
+                            0.
+                            .2
+                            1e3 表示1000
+                            典型的语法冲突案例： 0.toString(); 会出错
+                            因为0. 是个合法的十进制数，所以0.会被当作0 后边再接toString就出错了 0 .toString();这样toString的点才会被理解为纯属性的运算符，这就成立了
+                        BinaryIntergerLiteral 二进制
+                            0b111 
+                        OctalntergerLiteral 八进制
+                            0o10 0-7
+                        HexIntergerLiteral 十六进制
+                            0xff 0-9 A-F
+                String ：1.ASCII、Unicode字符串 2.UTF编码方式
+                    Character 字符 a
+                    Code Point  码点
+                    Encoding 编码方式
+                        ASCII （American Standard Code for Information Interchange，美国信息交换标准代码）是基于拉丁字母的一套电脑编码系统。它主要用于显示现代英语，而其扩展版本延伸美国标准信息交换码则可以部分支持其他西欧语言，并等同于国际标准 ISO/IEC 646。美国信息交换标准代码是这套编码系统的传统命名，互联网号码分配局现在更倾向于使用它的新名字 US-ASCII[2]。美国信息交换标准代码是美国电气和电子工程师协会里程碑之一。 没有中文字符的
+                        Unicode ：中文：万国码、国际码、统一码、单一码。是计算机科学领域里的一项业界标准。它对世界上大部分的文字系统进行了整理、编码，使得电脑可以用更为简单的方式来呈现和处理文字。
+                        UCS  范围0000-FFFF范围的字符集
+                        GB 跟Unicode的码点不一致 去兼容ASCII 国标的比Unicode范围小 省空间
+                            GB2312
+                            GBK(GB13000)
+                            GB18030
+                        ISO-8859 无中文
+                        BIG5 台湾 大五码 
+
+                Boolean 布尔值 true false 
+                Object 
+                Null  代表有值但为空 typeof的值是Object
+                Undefined  代表没有定义过它的值 一般我们只会检查它是否有Undefined值 类似于Number中的NaN
+                Symbol 一定程度上代替了String的作用，可以用于Object里的索引 
+                Symbol 和String最大的区别是 String 对象的属性总是可以取出来 Symbol的属性是取不出来的，专门用于Object属性名的特殊的基本类型
+            Execution Context
+
+            字符编码笔记：ASCII，Unicode 和 UTF-8 
+            一、ASCII 码
+            我们知道，计算机内部，所有信息最终都是一个二进制值。每一个二进制位（bit）有0和1两种状态，因此八个二进制位就可以组合出256种状态，这被称为一个字节（byte）。也就是说，一个字节一共可以用来表示256种不同的状态，每一个状态对应一个符号，就是256个符号，从00000000到11111111。
+
+            上个世纪60年代，美国制定了一套字符编码，对英语字符与二进制位之间的关系，做了统一规定。这被称为 ASCII 码，一直沿用至今。
+
+            ASCII 码一共规定了128个字符的编码，比如空格SPACE是32（二进制00100000），大写的字母A是65（二进制01000001）。这128个符号（包括32个不能打印出来的控制符号），只占用了一个字节的后面7位，最前面的一位统一规定为0。
+
+
+           二进制数组 参考链接 https://javascript.ruanyifeng.com/stdlib/arraybuffer.html
+           ArrayBuffer对象、TypedArray对象、DataView对象是JavaScript操作二进制数据的一个接口。这些对象早就存在，属于独立的规格，ES6将它们纳入了ECMAScript规格，并且增加了新的方法。
+
+            这些对象原始的设计目的，与WebGL项目有关。所谓WebGL，就是指浏览器与显卡之间的通信接口，为了满足JavaScript与显卡之间大量的、实时的数据交换，它们之间的数据通信必须是二进制的，而不能是传统的文本格式。文本格式传递一个32位整数，两端的JavaScript脚本与显卡都要进行格式转化，将非常耗时。这时要是存在一种机制，可以像C语言那样，直接操作字节，将4个字节的32位整数，以二进制形式原封不动地送入显卡，脚本的性能就会大幅提升。
+
+            二进制数组就是在这种背景下诞生的。它很像C语言的数组，允许开发者以数组下标的形式，直接操作内存，大大增强了JavaScript处理二进制数据的能力，使得开发者有可能通过JavaScript与操作系统的原生接口进行二进制通信。
+
+            二进制数组由三个对象组成。
+
+            （1）ArrayBuffer对象：代表内存之中的一段二进制数据，可以通过“视图”进行操作。“视图”部署了数组接口，这意味着，可以用数组的方法操作内存。
+
+            （2) TypedArray对象：用来生成内存的视图，通过9个构造函数，可以生成9种数据格式的视图，比如Uint8Array（无符号8位整数）数组视图, Int16Array（16位整数）数组视图, Float32Array（32位浮点数）数组视图等等。
+
+            （3）DataView对象：用来生成内存的视图，可以自定义格式和字节序，比如第一个字节是Uint8（无符号8位整数）、第二个字节是Int16（16位整数）、第三个字节是Float32（32位浮点数）等等。
+
+            简单说，ArrayBuffer对象代表原始的二进制数据，TypedArray对象代表确定类型的二进制数据，DataView对象代表不确定类型的二进制数据。它们支持的数据类型一共有9种（DataView对象支持除Uint8C以外的其他8种）。
+
+            String --Grammar  字符串语法
+            “ab" 'ab' `ab`
+            String--Grammar Chanllenge
+            A regular Expression to Match string literal用正则表导师写一个匹配单引号和双引号的字符串的写法
+            ES5:
+            "(?:[^"\n\\\r\u2028\u2029]|\\(?"['"\\bfnrtv\n\r\u\u2028\u2029]|\r\n)|\\x[0-9a-fA-F]{2}|\\u[0-9a-fA-F]{4}|\\[^0-9ux]'"\\bfnrtv\n\\\r\u2028\u2029])*"
+            '(?:[^"\n\\\r\u2028\u2029]|\\(?"['"\\bfnrtv\n\r\u\u2028\u2029]|\r\n)|\\x[0-9a-fA-F]{2}|\\u[0-9a-fA-F]{4}|\\[^0-9ux]'"\\bfnrtv\n\\\r\u2028\u2029])*'
+
+            String --Grammar-Template 反引号 `ab${x}abc${y}abc` 
+            `ab${
+            }abc${
+            }abc` 
+            
+            Null 和 Undefined
+            Null 关键字 
+            Undefined 全局变量 
+            函数中局部的定义undefined 为True
+            function fn(){
+                var undefined = 1;
+                console.log(undefined) //1
+            }
+              function fn(){
+                var null = 1;
+                console.log(null) //VM287:2 Uncaught SyntaxError: Unexpected token 'null'
+            }
+           最安全的产生undefined方法： void 0 
+
+    Object 任何一个对象都是唯一的，这与它本身的状态无关，即使状态完全一直的两个对象，也并不相等的
+Object----Class
+1、类是一种常obje见的描述对象的方式
+1.1 归类 多继承是非常自然的事情。 C++
+1.2 分类 单继承结构，并且会有一个基类
+Object----Prototype
+JavaScript中的分类思想
+原型是一种更接近人类原始认知的描述对象的方法，采用“相似”的方式描述对象。任何对象仅仅需要描述它自己与原型的区别即可。
