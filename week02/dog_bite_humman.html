@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>狗咬人的案例</title>
+</head>
+<body>
+    <script>
+        
+class Animal { 
+  constructor(name) {
+    this.name = name;
+  }
+  
+ 
+}
+
+class Dog extends Animal {
+  constructor(name) {
+    super(name); // call the super class constructor and pass in the name parameter
+    this.damage = 20;
+  }
+
+  bite() {
+    console.log(this.name + ' barks.'+'damage:'+this.damage);
+    return this.damage;
+  }
+}
+class Human extends Animal {
+  constructor(name) {
+    super(name); // call the super class constructor and pass in the name parameter
+    this.health = 100;
+  }
+
+  hurt(damage) {
+      this.health -= damage;
+    console.log(this.name + '被狗咬了，'+'health:'+this.health);
+    return this.health;
+  }
+}
+
+let d = new Dog('Mitzie');
+let damage = d.bite(); // Mitzie barks.
+let h = new Human("张三");
+h.hurt(damage);
+    </script>
+</body>
+</html>

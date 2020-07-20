@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+      function convertStringToNumber(string,x){
+          if(arguments.length <2){
+              x = 10; 
+          }
+          
+            let chars = string.split('');
+            let number =0;
+            // 二进制
+            let binaryExp = /^1[10]*$/;
+            // 八进制
+            let octonaryExp = /[0-7]+$/;
+            // 十进制
+            let decimalExp = /^[+-]?\d+$/;
+            // 十六进制
+            let HexadecimalExp = /([A-F][a-f][0-9])+$/;
+            let ExpontExp = /^[+-]?[\d]+([\.][\d]+)?([Ee][+-]?[\d]+)?$/;
+           
+    </script>
+</body>
+</html>

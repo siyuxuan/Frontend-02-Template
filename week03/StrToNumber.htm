@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+      function convertStringToNumber(string,x){
+          if(arguments.length <2){
+              x = 10; 
+          }
+          
+            let chars = string.split('');
+            let number =0;
+            // 二进制
+            let binaryExp = /^1[10]*$/;
+            // 八进制
+            let octonaryExp = /[0-7]+$/
+            // 十进制
+            let decimalExp = /^[+-]?\d+$/;
+            // 十六进制
+            let HexadecimalExp = /([A-F][a-f][0-9])+$/;
+            let ExpontExp = /^[+-]?[\d]+([\.][\d]+)?([Ee][+-]?[\d]+)?$/;
+            if(binaryExp.test(string )|| octonaryExp.test(string) || decimalExp.test(string) || HexadecimalExp.test(string) ){
+                let i=0;
+                    while(i<chars.length && chars[i] != '.'){
+                        if(x===10 && chars[0] === '-'){
+                            number = (-1)*number;
+                            i++;
+                        }
+                        number =number * x;
+                        number += chars[i].codePointAt(0) - '0'.codePointAt(0);
+                        i++;
+                    }
+                    if(chars[i] === '.'){
+                        i++;
+                    }
+                    let franction = 1;
+                    while(i<chars.length ){
+                        franction =franction /x;
+                        number  +=(chars [i].codePointAt(0) - '0'.codePointAt(0))*franction;
+
+                        i++;
+                    }
+                    return number;      
+      }else{
+          return 'NAN';
+      }
+    }
+
+      function convertNumberToString(number,x){
+          if(arguments.length<2){
+              x = 10;
+          }
+          if(number === "NAN"){
+              return "NAN";
+          }
+          if(x===10){
+            var integer =Math.floor(number);
+            var franction = number - integer;
+            var string ='';
+            while(integer > 0){
+                string = String(integer % x) +string;
+                integer =Math.floor(integer /x);
+            }
+        }
+        if(x===2){
+            // number1111011.111
+            // var number =111011 ;
+            var binaryFloatNumStr = number.toString();
+            console.log(binaryFloatNumStr) ; //"1111011.111"
+            var binaryFloatNumArr = binaryFloatNumStr.split(".");
+            console.log(binaryFloatNumArr) ;//111]
+            var n =0;
+           for(let i=0;i<binaryFloatNumArr.length;i++){
+               if(parseInt(binaryFloatNumArr[i]) == 1){
+                  n+= 2*(Math.pow(2,i));
+               }else{
+                   n+=0;
+               }
+
+               
+           }
+
+            
+
+        }
+          return string;
+         
+          
+      }
+    //   console.log(convertStringToNumber("100",2));
+    //   console.log(convertStringToNumber("103",2));
+    //   console.log(convertStringToNumber("107",8));
+    //   console.log(convertStringToNumber("107.12a",8));
+    //   console.log(convertStringToNumber('12.012'));  
+    // console.log(convertStringToNumber('12e-3'));
+    //   console.log(convertStringToNumber('12e-3'));  
+      console.log(convertNumberToString(123.45))
+      console.log(convertNumberToString(11100,2))
+    </script>
+</body>
+</html>

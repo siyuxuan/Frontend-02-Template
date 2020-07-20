@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Promise面试题</title>
+</head>
+<body>
+    <script>
+      /*  new Promise(resolve => resolve()).then(()=>console.log("1"))
+
+        setTimeout(() => {
+            console.log("2");
+        }, 0);
+        console.log("3");
+        // 312
+        */
+
+        /*new Promise(resolve => resolve()).then(()=>this.a=3)
+
+        setTimeout(() => {
+            console.log(this.a)
+        }, 0);*/
+        
+        new Promise(resolve => (console.log('0'),resolve())).then(()=>console.log("1"))
+
+        setTimeout(() => {
+            console.log("2");
+            new Promise(resolve => resolve()).then(()=>console.log("3"))
+        }, 0);
+        console.log("4");
+        console.log('5');
+        /*输出  宏任务
+            045 同步
+                1
+                宏任务
+                2
+                3
+            */
+            async function affo(){
+                console.log('-2');
+                await new Promise(resolve => resolve());
+                console.log('-1')
+
+            }
+            new Promise(resolve => (console.log('0'),resolve())).then(()=>(console.log("1"),
+                new Promise(resolve => resolve()).then(()=>console.log("1.5")))
+                )
+
+            setTimeout(() => {
+                console.log("2");
+                new Promise(resolve => resolve()).then(()=>console.log("3"))
+            }, 0);
+            console.log("4");
+            console.log('5');
+            affo();
+             /*输出  宏任务
+                0 4 5 -2 入队 1，-1
+                1 入队1.5
+                -1
+                1.5
+                宏任务
+                2
+                3
+                */
+    </script>
+</body>
+</html>

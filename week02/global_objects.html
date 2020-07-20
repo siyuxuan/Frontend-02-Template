@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>全局的对象（ global objects ）或称标准内置对象</title>
+</head>
+<body>
+    <script>
+        let set = new Set();
+        var objects = [    eval,    isFinite,    isNaN,    parseFloat,    parseInt,    decodeURI,    decodeURIComponent,    encodeURI,    encodeURIComponent,    Array,    Date,    RegExp,    Promise,    Proxy,    Map,    WeakMap,    Set,    WeakSet,    Function,    Boolean,    String,    Number,    Symbol,    Object,    Error,    EvalError,    RangeError,    ReferenceError,    SyntaxError,    TypeError,    URIError,    ArrayBuffer,    SharedArrayBuffer,    DataView,    Float32Array,    Float64Array,    Int8Array,    Int16Array,    Int32Array,    Uint8Array,    Uint16Array,    Uint32Array,    Uint8ClampedArray,    Atomics,    JSON,    Math,    Reflect];
+        // 将objects赋值给set
+        objects.forEach(o => set.add(o));
+        console.log("初始值---");
+        console.log(objects)
+        console.log("-------------");
+        console.log(set)
+        for(var i = 0; i < objects.length; i++) { var o = objects[i] 
+            // 获取对象的所有属性getOwnPropertyNames
+            for(var p of Object.getOwnPropertyNames(o)) {
+                 var d = Object.getOwnPropertyDescriptor(o, p) 
+                 if( (d.value !== null && typeof d.value === "object") || (typeof d.value === "function")) 
+                 if(!set.has(d.value)) set.add(d.value), objects.push(d.value); 
+                 if( d.get ) if(!set.has(d.get)) set.add(d.get), objects.push(d.get); 
+                 if( d.set ) if(!set.has(d.set)) set.add(d.set), objects.push(d.set); 
+                }}
+
+
+         console.log("获取全部 JavaScript 固有对象---");
+        console.log(objects)
+        console.log("-------------");
+        console.log(set)
+    </script>
+</body>
+</html>
