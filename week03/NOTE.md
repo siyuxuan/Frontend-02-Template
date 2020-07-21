@@ -1,6 +1,11 @@
+
 学习笔记
 1、StingToNumber(string) 如果传入的是科学计数法的数字字符串 怎么转成十进制的数字呢
-2、JavaScript执行（二）：闭包和执行上下文到底是怎么回事？ 关于Realm的知识中
+2、JavaScript执行（二）：闭包和执行上下文到底是怎么回事？ 
+3、Realm 
+      JS content => Realm
+    ECMA 262 global Object 
+    https://github.com/t39/ecma 262
 
 以下代码展示了在浏览器环境中获取来自两个 Realm 的对象，它们跟本土的 Object 做 instanceOf 时会产生差异：
 
@@ -48,3 +53,7 @@ console.log('Hi!');
 // resolved 
 
 上面代码中，Promise 新建后立即执行，所以首先输出的是Promise。然后，then方法指定的回调函数，将在当前脚本所有同步任务执行完才会执行，所以resolved最后 输出。
+
+
+
+
