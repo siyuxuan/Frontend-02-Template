@@ -42,7 +42,7 @@ ${this.bodyText}
     }
 //   使用send方法
     send(connection){
-        new Promise((resolve,reject) =>{
+        return new Promise((resolve,reject) =>{
             const parser = new ResponseParser;
             if(connection){
                 connection.write(this.toString());
@@ -57,13 +57,13 @@ ${this.bodyText}
             }
            
             connection.on('data', (data) => {
+                console.log(data.toString());
                 parser.receive(data.toString());
-                console.log(parser.statusLine); //HTTP/1.1 200 OK
-                console.log(parser.headers);
-                
-                // resolve(data.toString());
-                // console.log(data.toString())
-                connection.end();
+                if(parser.isFinished){
+                    resolve(parser.response);
+                    connection.end();
+                }
+
               });
               connection.on('error', (err) => {
                 reject(err) ;
@@ -82,6 +82,7 @@ class Response{
  * 利用状态机处理response
  * 
  */
+
 class ResponseParser{
     constructor(){
         this.WATTING_STATUS_LINE = 0;
@@ -100,6 +101,19 @@ class ResponseParser{
         this.headValue = "";
         this.bodyParser = null ;
      }
+     get isFinished(){
+         return this.bodyParser && this.bodyParser.isFinished;
+     }
+     get response(){
+         this.statusLine.match(/HTTP\/1.1 ([0-9]+) ([\s\S]+)/);
+         return {
+             StatusCode:RegExp.$1,
+             StatusText: RegExp.$2,
+             headers:this.headers,
+             body:this.bodyParser.content.join('')
+         }
+     }
+
     receive(string){
         for (let i=0; i<string.length;i++){
             this.receiveChar(string.charAt(i));
@@ -113,7 +127,7 @@ class ResponseParser{
                 this.statusLine += char;
         }else if(this.current ===  this.WATTING_STATUS_LINE_END){
             // console.log(string.charAt(i))
-            // this.statusLine.push(char);/
+            // this.statusLine.push(char);
             if(char === '\n'){
                 this.current = this.WATTING_HEADER_NAME;
            }
@@ -156,14 +170,11 @@ class ResponseParser{
                 this.current = this.WATTING_BODY;
             }
         }else if(this.current === this.WATTING_BODY){
-            // console.log(this.bodyParser)
-            // this.bodyParser.receiveChar(char);
-            if(this.current === )
+            //console.log(char)
+            this.bodyParser.receiveChar(char); 
+            // if(this.current === )
           
         } 
-       
-       
-
     }
 }
 
@@ -172,24 +183,52 @@ class TrunkedBodyParser{
         this.WATTING_LENGTH = 0;
         this.WATTING_LENGTH_LINE_END = 1;
         this.REANING_TRUNK = 2;
+        this.WATTING_NEW_LINE =3;
+        this.WATTING_NEW_LINE_END = 4;
         
         this.length = 0;
         this.content =[];
-
+        this.isFinished = false;
         this.current = this.WATTING_LENGTH;
     }
     receiveChar(char){
         // console.log(JSON.stringify(char))
         if(this.current === this.WATTING_LENGTH){
             if(char === '\r'){
+                console.log(this.length)
+                if(this.length === 0){
+                    this.isFinished =true;
+                    
+                }
                 this.current = this.WATTING_LENGTH_LINE_END
             }else{
-                this.length *=10;
-                this.length += 
+                this.length *=16;
+                this.length += parseInt(char, 16);
+            }
+        }else if(this.current === this.WATTING_LENGTH_LINE_END){
+            if(char === '\n'){
+                this.current = this.REANING_TRUNK;
+            }
+        }else if(this.current === this.REANING_TRUNK){
+            this.content.push(char);
+            this.length --;
+            if(this.length === 0){
+                this.current = this.WATTING_NEW_LINE;
+            }
+            //console.log('REANING_TRUNK',this.length)
+        }else if(this.current === this.WATTING_NEW_LINE){
+            if(char === '\r'){
+                this.current = this.WATTING_NEW_LINE_END;
+            }
+        }else if(this.current === this.WATTING_NEW_LINE_END){
+            if(char === '\n'){
+                this.current = this.WATTING_LENGTH;
+                //console.log('WATTING_LENGTH')
             }
         }
     }
 }
+
 
 
 // 第二步
@@ -207,8 +246,9 @@ void async function(){
         }
     })
     let response = await request.send();
+
     // console.log(request.send())
-    // console.log(response)
+    console.log(response)
 }();
 
 /*

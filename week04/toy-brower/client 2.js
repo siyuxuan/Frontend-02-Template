@@ -1,5 +1,4 @@
 const net = require('net');
-const parser = require('./parser.js');
 
 
 class Request{
@@ -196,7 +195,7 @@ class TrunkedBodyParser{
         // console.log(JSON.stringify(char))
         if(this.current === this.WATTING_LENGTH){
             if(char === '\r'){
-                // console.log(this.length)
+                console.log(this.length)
                 if(this.length === 0){
                     this.isFinished =true;
                     
@@ -246,10 +245,10 @@ void async function(){
         }
     })
     let response = await request.send();
-    // console.log(response)
-    // console.log(response.body);
-    let dom = parser.parseHTML(response.body);
-    console.log(dom)
-   
+
+    // console.log(request.send())
+    console.log(111)
+    console.log(response)
+    console.log(222)
 }();
 

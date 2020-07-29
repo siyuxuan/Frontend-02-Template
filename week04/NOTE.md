@@ -95,3 +95,12 @@ Class Request 查询XMLHttpRequest<https://developer.mozilla.org/zh-CN/docs/Web/
 >XMLHttpRequest（XHR）对象用于与服务器交互。通过 XMLHttpRequest 可以在不刷新页面的情况下请求特定 URL，获取数据。这允许网页在不影响用户操作的情况下，更新页面的局部内容。XMLHttpRequest 在 AJAX 编程中被大量使用。
 * XMLHttpRequest.open()
 >>XMLHttpRequest.open() 方法初始化一个请求。该方法要从JavaScript代码使用；从原生代码初始化一个请求，使用openRequest()替代。
+
+
+html的状态< html.spec.whatwg.org/multipage>
+### HTML中的tag标签
+* 开始标签
+* 结束标签
+* 自封闭标签
+
+
