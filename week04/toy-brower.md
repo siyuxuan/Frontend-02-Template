@@ -1,6 +1,6 @@
 # toy-brower 完成DOM 树构建
 浏览器工作原理
-![week04](/01.png)
+![week04](01.png)
 ## 1、服务端环境准备 (server.js)
 ```ruby
 const http = require('http');
