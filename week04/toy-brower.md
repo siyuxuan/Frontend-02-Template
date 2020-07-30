@@ -1,6 +1,4 @@
 # toy-brower 完成DOM 树构建
-浏览器工作原理
-![week04](01.png)
 ## 1、服务端环境准备 (server.js)
 ```ruby
 const http = require('http');
@@ -464,6 +462,8 @@ class TrunkedBodyParser{
 }
 ```
 ## 3、浏览器工作原理--HTML的解析 (parser.js)
+![week04](01.png)
+在整个浏览器架构中，它是从一个URL开始，通过HTTP模块得到HTML，下面要做的是经过一个parse，把HTML变成一个DOM树
 ### 3.1 拆分文件
 * 为了方便文件管理，我们把parser单独拆到文件中
 * parser接受HTML文本作为参数，返回一颗DOM树
