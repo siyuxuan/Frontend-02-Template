@@ -474,8 +474,7 @@ module.exports.parseHTML = function parseHTML(html){
 }
 ```
 ### 3.2 创建状态机
-参考网站<https://html.spec.whatwg.org/multipage/parsing.html
-#before-attribute-name-state>
+*html 80个状态 参考网站 https://html.spec.whatwg.org/multipage/parsing.html#tokenization*
 * 我们用FSM来实现HTML的分析
 * 在HTML标准中，已经规定了HTML的状态
 * Toy-Browser只挑选其中一部分状态，完成一个最简版本
@@ -511,3 +510,453 @@ module.exports.parseHTML = function parseHTML(html){
    state = state(EOF)
 }    
 ```
+### 3.3 解析标签
+
+主要的标签有：开始标签，结束标签和自封闭标签 这一步我们暂时忽略属性 用状态机去区分这三种标签
+
+```ruby
+function data(c){
+    if(c == "<"){
+        return tagOpen;
+    }else if(c == EOF){
+
+        return ;
+    }else {
+
+        return data;
+    }
+}
+
+function tagOpen(c){
+    if(c == "/"){
+        return endTagOpen;
+    }else if(c.match(/^[a-zA-Z]$/)){
+        return tagName(c);
+    }else{
+        return ;
+    }
+}
+function endTagOpen(c){
+    if(c.match(/^[a-zA-Z]$/)){
+
+        return tagName(c);
+    }else if(c == ">"){
+
+    }else if(c == EOF){
+
+    }else{
+
+    }
+}
+
+function tagName(c){
+     if(c.match(/^[\t\n\f ]$/)){
+         return beforeAttributeName;
+     }else if(c == "/"){
+         return selClosingStartTag;
+     }else if(c.match(/^[a-zA-Z]$/)){
+         return tagName;
+     }else if(c == ">"){
+         return data;
+     }else{
+         return tagName;
+     }
+}
+
+function  beforeAttributeName(c){
+    if(c.match(/^[\t\n\f ]$/)){
+        return beforeAttributeName;
+    }else if(c == "/" || c == ">" || c == EOF){
+        // return data;
+        return afterAttributeName(c);
+    }else if(c == "="){
+      
+    }else {
+        }
+        // console.log(`currentAttribute:${currentAttribute}`)
+        return attributeName(c);
+    }
+}
+ 
+function selClosingStartTag(c){
+    if(c == ">"){
+        currentToken.isSelClosing = true;
+        return data;
+    }else if(c == EOF){
+
+    }else{
+
+    }
+}
+```
+### 3.4 创建元素(emit(token))
+* 在状态机中，除了状态迁移，我们还会要加入业务逻辑
+* 我们在标签结束状态提交标签token
+#### 3.4.1在头部加入
+```ruby
+let currentToken = null;
+function eimt(token){
+    // console.log(token);
+}
+```
+#### 3.4.2  随着状态机一个个的一个个读进字符的时候逐步去构造token中的内容
+```ruby
+function data(c){
+    if(c == "<"){
+        return tagOpen;
+    }else if(c == EOF){
+        eimt({
+            type:"EOF"
+        });
+        return ;
+    }else {
+        eimt({
+            type:"text",
+            content:c
+        });
+        return data;
+    }
+}
+
+function tagOpen(c){
+    if(c == "/"){
+        return endTagOpen;
+    }else if(c.match(/^[a-zA-Z]$/)){
+        currentToken ={
+            type:"startTag",
+            tagName:""
+        }
+        return tagName(c);
+    }else{
+        return ;
+    }
+}
+
+function endTagOpen(c){
+    if(c.match(/^[a-zA-Z]$/)){
+        currentToken ={
+            type:"endTag",
+            tagName:""
+        }
+        return tagName(c);
+    }else if(c == ">"){
+
+    }else if(c == EOF){
+
+    }else{
+
+    }
+}
+
+function tagName(c){
+     if(c.match(/^[\t\n\f ]$/)){
+         return beforeAttributeName;
+     }else if(c == "/"){
+         return selClosingStartTag;
+     }else if(c.match(/^[a-zA-Z]$/)){
+         currentToken.tagName += c//.toLowerCase();
+         return tagName;
+     }else if(c == ">"){
+         eimt(currentToken);
+         return data;
+     }else{
+         return tagName;
+     }
+}
+
+/* <html 处理属性的状态  */
+function  beforeAttributeName(c){
+    if(c.match(/^[\t\n\f ]$/)){
+        return beforeAttributeName;
+    }else if(c == "/" || c == ">" || c == EOF){
+        // return data;
+        return afterAttributeName(c);
+    }else if(c == "="){
+      
+    }else {
+    //    遇到字符
+        currentAttribute = {
+            name:"",
+            value:""
+        }
+        // console.log(`currentAttribute:${currentAttribute}`)
+        return attributeName(c);
+    }
+}
+function selClosingStartTag(c){
+    if(c == ">"){
+        currentToken.isSelClosing = true;
+        return data;
+    }else if(c == EOF){
+
+    }else{
+
+    }
+} 
+```
+### 3.5 处理属性
+* 属性值分为单引号、双引号、无引号三种写法，因此需要较多状态处理
+* 处理属性的方式跟标签类似
+* 属性结束时，我们把属性加到标签Token上
+#### 3.5.1 首先定义一个全局变量
+```ruby
+let currentAttribute =null;
+```
+#### 3.5.2 处理属性的代码
+```ruby
+/* <html 处理属性的状态  */
+function  beforeAttributeName(c){
+    if(c.match(/^[\t\n\f ]$/)){
+        return beforeAttributeName;
+    }else if(c == "/" || c == ">" || c == EOF){
+        // return data;
+        return afterAttributeName(c);
+    }else if(c == "="){
+      
+    }else {
+    //    遇到字符
+        currentAttribute = {
+            name:"",
+            value:""
+        }
+        // console.log(`currentAttribute:${currentAttribute}`)
+        return attributeName(c);
+    }
+}
+
+/* <div class ="d1"  */
+function attributeName(c){
+    if(c.match(/^[\t\n\f ]$/) || c == "/" || c == ">" || c == EOF){
+        return afterAttributeName(c);
+    }else if (c == "="){
+        return beforeAttributeValue;
+    }else if(c == "\u0000"){
+
+    }else if(c == "\""|| c == "'" || c =="<"){
+
+    }else{
+        currentAttribute.name += c;
+        return attributeName;
+    }
+}
+
+function afterAttributeName(c){
+     if(c.match(/^[/t/n/f ]$/)){
+         return afterAttributeName;
+     }else if( c == "/"){
+         return selClosingStartTag;
+     }else if(c == "="){
+         return beforeAttributeValue;
+     }else if(c = ">"){
+         currentToken[currentAttribute.name] = currentAttribute.value;
+         eimt(currentToken);
+         return data;
+     }else if(c == EOF){
+
+
+     }else{
+         currentToken[currentAttribute.name] = currentAttribute.value;
+         currentAttribute = {
+             name:"",
+             value:""
+         };
+         return attributeName(c);
+     }
+
+}
+
+function beforeAttributeValue(c){
+    if(c.match(/^[\t\n\f ]$/) || c == "/" || c == ">" || c == EOF){
+        return beforeAttributeValue;
+    }else if(c == "\""){
+        return doubleQuotedAttributeValue;
+    }else if(c == "\'"){
+        return singleQuotedAttributeValue;
+    }else if(c == ">"){
+        // return data；
+    }else{
+        return UnQuotedAttributeValue;
+    }
+}
+
+function doubleQuotedAttributeValue(c){
+    if(c == "\""){
+        currentToken[currentAttribute.name] = currentAttribute.value;
+        return afterQuoteAttributeValue;
+    }else if(c == "\u0000"){
+
+    }else if(c == EOF){
+
+    }else{
+        currentAttribute.value  += c;
+        return doubleQuotedAttributeValue;
+    }
+}
+
+
+function singleQuotedAttributeValue(c){
+    if(c == "\'"){
+        currentToken[currentAttribute.name] = currentAttribute.value;
+        return afterQuoteAttributeValue;
+    }else if(c == "\u0000"){
+
+    }else if(c == EOF){
+
+    }else{
+        currentAttribute.value  += c;
+        // return singleQuotedAttributeValue;
+        return doubleQuotedAttributeValue;
+    }
+}
+/* <div id="ad" class=""></div> */
+function afterQuoteAttributeValue(c){
+    if(c.match(/^[\t\n\f ]$/)){
+        return beforeAttributeName;
+    }else if(c == "/"){
+        return selClosingStartTag;
+    }else if( c == ">"){
+        currentToken[currentAttribute.name] = currentAttribute.value;
+        eimt(currentToken);
+        return data;
+    }else if (c == EOF){
+
+    }else{
+        currentAttribute.value += c;
+        return doubleQuotedAttributeValue;
+    }
+}
+
+function UnQuotedAttributeValue(c){
+    if(c.match(/^[\t\n\f ]$/)){
+        currentToken[currentAttribute.name] = currentAttribute.value;
+        return beforeAttributeName;
+    }else if(c == "/"){
+        currentToken[currentAttribute.name] = currentAttribute.value;
+        return selfClosingStartTag;
+    }else if(c == ">"){
+        currentToken[currentAttribute.name] = currentAttribute.value;
+        eimt(currentToken);
+        return data;
+    }else if(c == "\u0000"){
+
+    }else if(c == "\"" || c == "\'" || c == "<" || c == "="  || c == "`"){
+
+    }else if(c == EOF){
+
+    }else{
+        currentAttribute += c;
+        return UnQuotedAttributeValue;
+    }
+}
+
+```
+### 3.6 用token构建DOM树
+* 从标签构建DOM树的基本技巧是使用栈
+* 遇到开始标签时创建元素并入栈，遇到结束标签时出栈
+* 自封闭节点可视为入栈后立刻出栈
+* 任何元素的父元素是它入栈前的栈顶
+#### 3.6.1  首先定义一个全局的数据结构，push进去一个初始节点doucument节点
+```ruby
+let stack = [{type: "documnet",children:[]}];
+```
+#### 3.6.2 emit会接收从状态机中产生的所有token 忽视文本节点
+```ruby
+function eimt(token){
+    // console.log(token);
+    let top = stack[stack.length -1];
+    if(token.type == "startTag"){
+        let element ={
+            type:"element",
+            children:[],
+            attributes:[]
+        };
+
+        element.tagName = token.tagName;
+
+        for(let p in token){
+            if(p != "type" && p != "tagName")
+                element.attributes.push({
+                    name:p,
+                    value: token[p]
+                });
+        }
+        
+        top.children.push(element);
+        element.parent = top;
+
+        if(!token.isSelClosing)
+            stack.push(element);
+        currentTextNode = null;
+    }else if(token.type == "endTag"){
+        // console.log(top.tagName+'======'+token.tagName)
+        if(top.tagName != token.tagName){
+            throw new Error("Tag start end dosen't match!");
+        }else{
+            stack.pop();
+        }
+        
+        currentTextNode = null;
+    }else if(token.type == "text"){
+       return;
+    }
+```
+
+*各种状态下如何配对标签 参考链接 https://html.spec.whatwg.org/multipage/parsing.html#parsing-main-inhtml*
+### 3.7 文本节点 
+
+* 文本节点与自封闭标签处理类似
+* 多个文本节点需要合并
+
+把eimit中遇到文本节点就return的逻辑去掉，加上一个类型为Text的逻辑，当前处于一个文本节点时，如果没有逻辑节点的话，就创建一个文本节点，定义一个全局变量currentTextNode ，遇到结束一个标签时，开始标签和结束标签currentTextNode清空，但遇到字符型的token时 给当前文本节点追加一个content
+```ruby
+let currentTextNode = null;
+
+function eimt(token){
+    // console.log(token);
+    let top = stack[stack.length -1];
+    if(token.type == "startTag"){
+        let element ={
+            type:"element",
+            children:[],
+            attributes:[]
+        };
+
+        element.tagName = token.tagName;
+
+        for(let p in token){
+            if(p != "type" && p != "tagName")
+                element.attributes.push({
+                    name:p,
+                    value: token[p]
+                });
+        }
+        
+        top.children.push(element);
+        element.parent = top;
+
+        if(!token.isSelClosing)
+            stack.push(element);
+        currentTextNode = null;
+    }else if(token.type == "endTag"){
+        // console.log(top.tagName+'======'+token.tagName)
+        if(top.tagName != token.tagName){
+            throw new Error("Tag start end dosen't match!");
+        }else{
+            stack.pop();
+        }
+        
+        currentTextNode = null;
+    }else if(token.type == "text"){
+        if(currentTextNode == null){
+            currentTextNode = {
+                type :"text",
+                content:""
+            }
+            top.children.push(currentTextNode);
+        }
+        currentTextNode.content += token.content;
+        console.log(currentTextNode.content);
+    }
+```
+
+**以上完成DOM树构建 不能解析<! doctype html> head 中出现<meta />会出错**

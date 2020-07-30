@@ -118,7 +118,7 @@ function tagName(c){
      }
 }
 
-{/* <html 处理属性的状态  */}
+/* <html 处理属性的状态  */
 function  beforeAttributeName(c){
     if(c.match(/^[\t\n\f ]$/)){
         return beforeAttributeName;
@@ -138,7 +138,7 @@ function  beforeAttributeName(c){
     }
 }
 
-{/* <div class ="d1"  */}
+/* <div class ="d1"  */
 function attributeName(c){
     if(c.match(/^[\t\n\f ]$/) || c == "/" || c == ">" || c == EOF){
         return afterAttributeName(c);
@@ -222,7 +222,7 @@ function singleQuotedAttributeValue(c){
         return doubleQuotedAttributeValue;
     }
 }
-{/* <div id="ad" class=""></div> */}
+/* <div id="ad" class=""></div> */
 function afterQuoteAttributeValue(c){
     if(c.match(/^[\t\n\f ]$/)){
         return beforeAttributeName;
