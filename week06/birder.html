@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <style type="text/css">
+    .bird {
+      width: 400px;
+      height: calc(1440 * 400 / 1920 * 1px);
+    }
+    canvas.bird {
+      background: #ccc;
+    }
+  </style>
+</head>
+<body>
+  <img id="img" class="bird" src="./parrot.jpg">
+  <canvas id="canvas" width="1920" height="1440" class="bird"></canvas>
+  <script type="text/javascript">
+   var img = new Image();
+    img.src = "./parrot.jpg";
+    img.onload = function() {
+    draw(this);
+    };
+
+    function draw(img) {
+    var canvas = document.getElementById('canvas');
+    var ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0);
+    img.style.display = 'none';
+    
+   
+    }
+
+    
+  </script>
+</body>
+</html>

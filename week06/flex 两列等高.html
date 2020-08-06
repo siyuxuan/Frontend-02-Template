@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>两列等高</title>
+    <style>
+
+       
+.parent {
+  display:flex;
+  width:300px;
+  justify-content:center;
+  align-content:center;
+  align-items:stretch; 
+  /* 思路是创建一个只有一行的 flexbox，然后用 stretch 属性让每个元素高度都等于行高 */
+  /* align-items:center; */
+}
+.child {
+  width:100px;
+  outline:solid 1px;
+}
+    </style>
+</head>
+<body>
+
+    <div class="parent">
+        <div class="child" style="height:300px;">
+        </div>
+        <div class="child">
+        </div>
+      </div>
+      <br/>
+      <div class="parent">
+        <div class="child" >
+        </div>
+        <div class="child" style="height:300px;">
+        </div>
+      </div>
+</div>
+</body>
+</html>
