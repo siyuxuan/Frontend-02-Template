@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # CSS选择器 -选择器优先级
 关于CSS优先级问题，我通过查阅CSS3文档 (https://www.w3.org/TR/selectors-3/#class-html) 中的有关优先级的介绍 
 
@@ -20,3 +21,6 @@ Concatenating the three numbers a-b-c (in a number system with a large base) giv
                 #s12:not(FOO)   /* a=1 b=0 c=1 -> specificity = 101 */
 
  *CSS :not伪类可能错误的认识* 参考<https://www.zhangxinxu.com/wordpress/2019/07/css-not-pseudo-class/>
+=======
+06学习笔记
+>>>>>>> bd184f678b28d01651f694de7281e954902454fa
