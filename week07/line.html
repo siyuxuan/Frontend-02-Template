@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>正常流的行级排布</title>
+</head>
+<body>
+    <div style="font-size: 50px; line-height: 100px; background-color: pink">
+        <div style="vertical-align: top; overflow: visible;display: inline-block;width: 1px;height: 1px;">
+            <div style="width:2000px; height:1px;background-color:red;"></div>
+        </div>
+        <span>hello 前端</span>
+        <!-- inline-block 行内盒的基线的位置随着里面的文字去变化的 ，行内盒的文字使用 vertical-align: bottom-->
+        <!-- <div style="line-height: 70px; width: 100px;height: 150px;background-color: #ffff00; display: inline-block;">b<br />c</div> -->
+        <!-- <div style="vertical-align: top; line-height: 70px; width: 100px;height: 150px;background-color: #ffff00; display: inline-block;">b<br />c</div> -->
+        <div style="vertical-align: text-bottom; line-height: 70px; width: 100px;height: 150px;background-color: #ffff00; display: inline-block;">b<br />c</div>
+        <div style="vertical-align: text-top; line-height: 70px; width: 100px;height: 150px;background-color: #ffff00; display: inline-block;">b<br />c</div>
+        <!-- <div style="line-height: 70px; width: 100px;height: 150px;background-color: #ffff00; display: inline-block;">b<br />c</div> -->
+    </div>
+</body>
+</html>

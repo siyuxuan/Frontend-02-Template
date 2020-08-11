@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>hsv demo</title>
+    <style>
+        .button{
+            display: inline-block;
+            outline: none;
+            cursor: pointer;
+            text-align:center;
+            text-decoration: none;
+            font:14px/100% Arial,Helvetica,sans-serif;
+            padding:0.5em 2em .55em;
+            text-shadow: 0 1px 1px rgba(0,0,0,.3);
+            border-radius: .5em;
+            box-shadow: 0 1px 2px rgba(0,0,0,.2);
+            color:#fff;
+            border: 1px solid #000;
+        }
+        /* .orange{background-color:orange;} */
+    </style>
+</head>
+<body>
+    <div class="button orange">hsv test</div>
+    <script>
+        // let btn = document.getElementsByClassName('button')[0];
+        let btn = document.querySelector('.button');
+        let h = 50;
+        
+        console.log(btn);
+        setInterval(()=> {
+            h ++;
+            h =h % 360;
+            btn.style.borderColor = `hsl(${h}, 95%, 45%)`;
+            // btn.style.background = `hsl(${h}, 95%, 84.1%)`;
+            btn.style.backgtound= `linear-gradient(to bottom, red, yellow)`;
+        },100);
+
+    </script>
+</body>
+</html>
