@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>range demo</title>
+</head>
+<body>
+    <div id="a">0001<span style="background-color: greenyellow;">124556433</span>01032030400</div>
+    <script>
+        let range = new Range();
+        range.setStart(document.getElementById('a').childNodes[1],0);
+        range.setEnd(document.getElementById('a').childNodes[2],0);
+        // var ele = document.getElementById('a');
+        // range.setStart(ele.childNodes[1],3);
+        // range.setEnd(ele.childNodes[2],3);
+        // range.extractContents();
+    </script>
+</body>
+</html>
