@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Regular Expression</title>
+</head>
+<body>
+    <!-- how to use regExp 
+        test();
+        exec();
+
+        字符串使用正则
+
+    -->
+   <script>
+    // let str ="8dhabc33fdfi_adv";
+    //   定义正则表达式
+    // let reg = /(abc+)/;
+
+    // 通过正则条件去匹配字符串，匹配成功返回true，
+    // console.log(reg.test(str));
+    // 返回匹配数组项，index是指的哥个匹配相，所在字符串中的位置
+    // 从0开始，input属性代表的是原字符串
+    // console.log(reg.exec(str))
+
+    /*match 字符串方法
+        非全局 返回第一个符合条件的数组
+        全局： 获取所有符合条件的数据
+    */
+    // let str ="23sddggg33fgrw323dg333d3333";
+    //let reg1 =/33/g;//匹配全局
+    // console.log(str.match(reg1));
+
+   /* 
+   // search 匹配成功 返回第一个结果的下标 匹配失败返回-1
+    let str ="23sddabcggg33fgrw323dg333d3333";
+    let reg =/abc/;
+    console.log(str.search(reg));
+    */
+
+    /*replace
+        参数1:匹配规则
+        参数2:替换内容
+   
+    let str ="23sddggg33fgrw323dg333d3333";
+    let reg =/33/g;
+    console.log(str.replace(reg,'5566'));
+    console.log(str.replace(reg,function(){
+        return 5*5;
+    })); */
+
+
+         
+   </script>
+
+   <!-- 
+       匹配规则
+       正则表达式有两种基本字符类型组成
+       1、原义文本字符 a=a 1=a /abc/
+       2、元字符 有特殊含义的非字母字符
+       * + ？ $ ^ | \ {} [] ()
+       \t 水平制表符
+       \v 垂直制表符
+       \n 换行符
+       \r 回车符
+       \0 空字符
+       \s 空白字符
+       \f 换页符
+
+
+       
+    -->
+   
+   <script>
+       /**
+        * 。：任意一个字符
+        * ^: 必须以***开头
+        * $： 必须以*** 结尾
+        * | 、
+        
+    字符类
+       我们可以用【】构建简单类
+       表达式【abc】：把字符a|b|c归为一类，表达式可以匹配其中的字符
+       字符类取反
+       使用元字符^创建反向类
+       【^abc】 表示不是字符a|b|c
+
+       - : 0-9 表示0 1 2 3 4 5 6 7 8 9
+
+       /[a-z]/gi == /[a-zA-Z]/
+        [a-zA-Z_0-9] 数字字符
+
+        匹配汉字 使用unicode编码
+
+        量词：
+        {n}   : 出现n次
+        {n,m} : 出现n-m次
+        {n,}  : 至少出现n次
+        ?     : 出现0次或一次 （最多一次）
+        +     : 出现一次或多次（最少出现一次）
+        *     : 出现零次或多次（任意次）
+
+        预定义类
+        \d =[0-9] 匹配所有的数字      digital
+        \D =[^0-9] 非数字
+        \w = [a-zA-Z] 匹配所有的字母  word
+        \W = [^a-zA-Z] 非字母
+        \s [\n\t]     空白符           space 
+        \S [^\n\t]
+
+        补充  m & ()
+
+       */
+    /*
+    //   元字符- . :任意一个字符
+     let str = 'abcsss';
+     let reg = /a.c/;
+     console.log(str.match(reg));
+     */
+
+      //   元字符- 位置字符 ^开头
+    var str = 'abcsss';
+    // let reg = /^abc/;
+    var reg = /ss$/;
+    // console.log(str.match(reg));
+
+     let str1 = 'abc';
+     let reg1 = /^abc$/;
+    //  console.log(str1.match(reg1));
+
+     var str2 = "2s2334553433";
+     var reg2 = /22|33/;
+    //  console.log(str2.match(reg2));
+
+    //  字符类 拖字符 ^abc 在调用test方法时 会将字符串中的所有abc干掉 如果字符串仍有内容返回true
+    var str3 ="abab123";
+    var reg3 = /[^ab]/g;
+    // console.log(reg3.test(str3));
+
+    var str3 ="abab123";
+    var reg3 = /[1]/g;
+    // console.log(reg3.test(str3));
+
+    // 字符类 连字符
+    var str = "1234558039974720020";
+    var reg = /[^0-9]/g;
+    // console.log(reg.test(str));
+
+    // 匹配字符
+    var str ='ahdgfdkglkahss123dhhAA';
+    var reg = /[a-z]/gi;
+    var reg2 = /[a-zA-Z_0-9]/g;
+    // console.log(str.match(reg));
+    // console.log(str.match(reg2));
+
+    //匹配汉字
+    var str ="fasdgd13254中文";
+    var reg = /[\u4e00-\u9fa5]/g;
+    // console.log(str.match(reg));
+
+    // 重复类
+    var str ="21111123";
+    var reg = /1{5}/;
+    // console.log(str.match(reg));
+
+    var str ="200300";
+    var reg = /0{2,}/;
+    // console.log(str.match(reg));
+
+    var str ="2121115";
+    var reg = /1{1,2}/g;
+    var reg2 =/1?/;
+    // console.log(str.match(reg));
+
+
+    // console.log(/\d/.test("1234656"));
+    // console.log(/\D/.test("1234656"));
+    // console.log(/\w/.test("sdgjgaj_add123"));
+    // console.log(/\W/.test("sdgjgaj_add123"));
+
+    // console.log(/\s/.exec("hello world"));
+    // console.log(/\S\w*/g.exec("hello world"));
+
+
+    var str ="hello world\n";
+    var reg = /world$/;
+    var reg2 = /world$/m;
+    console.log(reg.test(str));
+    console.log(reg2.test(str));
+
+    // 特殊字符
+    console.log(/\n/.exec("hello world \n"))
+
+    // 组匹配
+    console.log(/abc+/.exec("abcccc123abc"));
+    console.log(/(abc)+/.exec("abcccc123abc")) 
+
+    // 单词边界
+    console.log(/\bis/.exec("this is a good boy!"))
+    console.log(/\Bis/.exec("this is a good boy!"))
+   </script>
+</body>
+</html>

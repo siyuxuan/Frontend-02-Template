@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Regular Expression</title>
+</head>
+<body>
+    <!-- why regExp -->
+   <script>
+       // 场景：
+        // 有一个字符串 包含字母和数字 找出所有数字
+        function findNumber(str){
+           var arr= [];
+           var temp ="";
+           for(let i=0;i<str.length;i++){
+               let singleStr=str.charAt(i);
+            //    判断字符时候为数字
+                //    console.log(singleStr);
+                if(singleStr >= '0' && singleStr <= '9'){
+                    temp += singleStr;
+                }else if(temp !== ''){
+                    arr.push(temp);
+                    temp = "";
+                }
+                // 最后数字找不到，原因是循环已结束
+                if(i === str.length-1 && singleStr <= '9' && singleStr >= '0' ){
+                    arr.push(temp);
+                   
+                }
+           }
+           return arr;
+           
+
+       }
+
+       let str ='11ads22ddf33ghfg55aaa';
+        // console.log(findNumber(str));
+        // 通过正则实现上面方法
+        function regExp(){
+            return str.match(/\d+/g);
+        }
+        console.log(regExp());
+   </script>
+   
+   
+</body>
+</html>
