@@ -565,3 +565,4 @@ The XMLHttpRequest Standard defines an API that provides scripted client functio
 ```ruby
 {names = filterOut(names,["MediaMetadata", "MediaSession"])}
 ```
+以上是目前一整理的API 还是有104 个没有整理完
