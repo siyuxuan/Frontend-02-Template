@@ -86,14 +86,13 @@ names = names.filter( e => !e.match(/^webkit/))
 ```
 除此之外，我们在 HTML 标准中还能找到所有的接口，这些我们也过滤掉：
 ```ruby
-
-
+{
     let interfaces = new Set();
     objects = ["ApplicationCache", "AudioTrack", "AudioTrackList", "BarProp", "BeforeUnloadEvent", "BroadcastChannel", "CanvasGradient", "CanvasPattern", "CanvasRenderingContext2D", "CloseEvent", "CustomElementRegistry", "DOMStringList", "DOMStringMap", "DataTransfer", "DataTransferItem", "DataTransferItemList", "DedicatedWorkerGlobalScope", "Document", "DragEvent", "ErrorEvent", "EventSource", "External", "FormDataEvent", "HTMLAllCollection", "HashChangeEvent", "History", "ImageBitmap", "ImageBitmapRenderingContext", "ImageData", "Location", "MediaError", "MessageChannel", "MessageEvent", "MessagePort", "MimeType", "MimeTypeArray", "Navigator", "OffscreenCanvas", "OffscreenCanvasRenderingContext2D", "PageTransitionEvent", "Path2D", "Plugin", "PluginArray", "PopStateEvent", "PromiseRejectionEvent", "RadioNodeList", "SharedWorker", "SharedWorkerGlobalScope", "Storage", "StorageEvent", "TextMetrics", "TextTrack", "TextTrackCue", "TextTrackCueList", "TextTrackList", "TimeRanges", "TrackEvent", "ValidityState", "VideoTrack", "VideoTrackList", "WebSocket", "Window", "Worker", "WorkerGlobalScope", "WorkerLocation", "WorkerNavigator"];
     objects.forEach(o => interfaces.add(o));
 
     names = names.filter(e => !interfaces.has(e));
-
+}
 ```
 这样过滤之后，我们已经过滤掉了所有的事件、Window 对象、JavaScript 全局对象和 DOM 相关的属性，但是，竟然还剩余了很多属性！好了，接下来我们才进入今天的正题
 
@@ -215,7 +214,9 @@ names = filterOut(names, ["CryptoKey", "SubtleCrypto", "Crypto", "crypto"]);
 * https://www.w3.org/TR/media-source/
 
 这份标准中包含了三个接口，这份标准还扩展了一些接口，但是没有扩展 
-```ruby window。names = filterOut(names, ["MediaSource", "SourceBuffer", "SourceBufferList"]);
+
+```ruby 
+window.names = filterOut(names, ["MediaSource", "SourceBuffer", "SourceBufferList"]);
 ```
 ### The Screen Orientation API
 ScreenOrientation，它来自 W3C 的 The Screen Orientation API 标准：

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>apis</title>
+</head>
+<body>
+    <script>
+        let names =Object.getOwnPropertyNames(window);
+
+        function filterOut(names,props){
+            let set = new Set();
+            props.forEach(o => {
+                set.add(o);
+            });
+
+            return names.filter(e => !set.has(e));
+        }
+
+        // ECMA 262 javaScript 定义的所有属性的过滤
+      {
+          let js = new Set();
+          let Objects = ["globalThis", "console","BigInt", "BigInt64Array", "BigUint64Array", "Infinity", "NaN", "undefined", "eval", "isFinite", "isNaN", "parseFloat", "parseInt", "decodeURI", "decodeURIComponent", "encodeURI", "encodeURIComponent", "Array", "Date", "RegExp", "Promise", "Proxy", "Map", "WeakMap", "Set", "WeakSet", "Function", "Boolean", "String", "Number", "Symbol", "Object", "Error", "EvalError", "RangeError", "ReferenceError", "SyntaxError", "TypeError", "URIError", "ArrayBuffer", "SharedArrayBuffer", "DataView", "Float32Array", "Float64Array", "Int8Array", "Int16Array", "Int32Array", "Uint8Array", "Uint16Array", "Uint32Array", "Uint8ClampedArray", "Atomics", "JSON", "Math", "Reflect", "escape", "unescape"];
+          Objects.forEach(o => js.add(o));
+          names = names.filter(e =>!js.has(e));
+      }
+
+    //subclass Node
+    names = names.filter(e => {
+        try {
+            return !(window[e].prototype instanceof Node)
+        } catch (error) {
+            return true;
+        }
+    }).filter(e => e != "Node");
+    // Events
+    names = names.filter(e => !e.match(/^on/));
+    // webkit private
+    names = names.filter(e => !e.match(/^webkit/));
+    // https://html.spec.whatwg/#window
+
+    {
+        let names = Object.getOwnPropertyNames(window)
+        let js = new Set();
+        let objects = ["BigInt", "BigInt64Array", "BigUint64Array", "Infinity", "NaN", "undefined", "eval", "isFinite", "isNaN", "parseFloat", "parseInt", "decodeURI", "decodeURIComponent", "encodeURI", "encodeURIComponent", "Array", "Date", "RegExp", "Promise", "Proxy", "Map", "WeakMap", "Set", "WeakSet", "Function", "Boolean", "String", "Number", "Symbol", "Object", "Error", "EvalError", "RangeError", "ReferenceError", "SyntaxError", "TypeError", "URIError", "ArrayBuffer", "SharedArrayBuffer", "DataView", "Float32Array", "Float64Array", "Int8Array", "Int16Array", "Int32Array", "Uint8Array", "Uint16Array", "Uint32Array", "Uint8ClampedArray", "Atomics", "JSON", "Math", "Reflect", "escape", "unescape"];
+        objects.forEach(o => js.add(o));
+        names = names.filter(e => !js.has(e));
+
+        names = names.filter( e => {
+            try { 
+                return !(window[e].prototype instanceof Node)
+            } catch(err) {
+                return true;
+            }
+        }).filter( e => e != "Node")
+
+        let windowprops = new Set();
+        objects = ["window", "self", "document", "name", "location", "history", "customElements", "locationbar", "menubar", " personalbar", "scrollbars", "statusbar", "toolbar", "status", "close", "closed", "stop", "focus", " blur", "frames", "length", "top", "opener", "parent", "frameElement", "open", "navigator", "applicationCache", "alert", "confirm", "prompt", "print", "postMessage", "console"];
+        objects.forEach(o => windowprops.add(o));
+        names = names.filter(e => !windowprops.has(e));
+    }
+
+        {
+        let interfaces = new Set();
+        objects = ["ApplicationCache", "AudioTrack", "AudioTrackList", "BarProp", "BeforeUnloadEvent", "BroadcastChannel", "CanvasGradient", "CanvasPattern", "CanvasRenderingContext2D", "CloseEvent", "CustomElementRegistry", "DOMStringList", "DOMStringMap", "DataTransfer", "DataTransferItem", "DataTransferItemList", "DedicatedWorkerGlobalScope", "Document", "DragEvent", "ErrorEvent", "EventSource", "External", "FormDataEvent", "HTMLAllCollection", "HashChangeEvent", "History", "ImageBitmap", "ImageBitmapRenderingContext", "ImageData", "Location", "MediaError", "MessageChannel", "MessageEvent", "MessagePort", "MimeType", "MimeTypeArray", "Navigator", "OffscreenCanvas", "OffscreenCanvasRenderingContext2D", "PageTransitionEvent", "Path2D", "Plugin", "PluginArray", "PopStateEvent", "PromiseRejectionEvent", "RadioNodeList", "SharedWorker", "SharedWorkerGlobalScope", "Storage", "StorageEvent", "TextMetrics", "TextTrack", "TextTrackCue", "TextTrackCueList", "TextTrackList", "TimeRanges", "TrackEvent", "ValidityState", "VideoTrack", "VideoTrackList", "WebSocket", "Window", "Worker", "WorkerGlobalScope", "WorkerLocation", "WorkerNavigator"];
+        objects.forEach(o => interfaces.add(o));
+
+        names = names.filter(e => !interfaces.has(e));
+    }
+    // Intl
+    names = names.filter(e => e != "Intl");
+    // WebGLContext​Event
+    names = filterOut(names, ["WebGLContextEvent","WebGLObject", "WebGLBuffer", "WebGLFramebuffer", "WebGLProgram", "WebGLRenderbuffer", "WebGLShader", "WebGLTexture", "WebGLUniformLocation", "WebGLActiveInfo", "WebGLShaderPrecisionFormat", "WebGLRenderingContext","WebGLVertexArrayObject", "WebGLTransformFeedback", "WebGLSync", "WebGLSampler", "WebGLQuery", "WebGL2RenderingContext"]);
+    // Web Audio API
+    names = filterOut(names, ["AudioContext", "AudioNode", "AnalyserNode", "AudioBuffer", "AudioBufferSourceNode", "AudioDestinationNode", "AudioParam", "AudioListener", "AudioWorklet", "AudioWorkletGlobalScope", "AudioWorkletNode", "AudioWorkletProcessor", "BiquadFilterNode", "ChannelMergerNode", "ChannelSplitterNode", "ConstantSourceNode", "ConvolverNode", "DelayNode", "DynamicsCompressorNode", "GainNode", "IIRFilterNode", "MediaElementAudioSourceNode", "MediaStreamAudioSourceNode", "MediaStreamTrackAudioSourceNode", "MediaStreamAudioDestinationNode", "PannerNode", "PeriodicWave", "OscillatorNode", "StereoPannerNode", "WaveShaperNode", "ScriptProcessorNode", "AudioProcessingEvent", "AudioScheduledSourceNode", "AudioParamMap","BlobEvent"]);
+    // https://encoding.spec.whatwg.org/#dom-textencoder
+    names = filterOut(names, ["TextDecoder", "TextEncoder", "TextDecoderStream", "TextEncoderStream"]);
+    // https://wicg.github.io/BackgroundSync/spec/#sync-manager-interface
+    names = filterOut(names, ["SyncManager", "PeriodicSyncManager"]);
+    // SourceBufferList
+    // names = names.filter(e => e!= "SourceBufferList")
+    names = filterOut(names, ["MediaSource", "SourceBuffer", "SourceBufferList"])
+    // The Screen Orientation API
+    names = names.filter(e => e!= "ScreenOrientation")
+    // WebRTC API
+    names = filterOut(names,["RTCTrackEvent", "RTCStatsReport", "RTCSessionDescription", "RTCSctpTransport", "RTCRtpTransceiver", "RTCRtpSender", "RTCRtpReceiver", "RTCPeerConnectionIceEvent", "RTCPeerConnectionIceErrorEvent", "RTCPeerConnection", "RTCIceCandidate", "RTCErrorEvent", "RTCError", "RTCDtlsTransport", "RTCDataChannelEvent", "RTCDataChannel", "RTCDTMFToneChangeEvent", "RTCDTMFSender", "RTCCertificate"])
+
+    names = names.filter(e => e !="PhotoCapabilities")
+    // MediaStream API
+    names = filterOut(names,["MediaStreamTrack","MediaStream","MediaStreamEvent","MediaStreamTrackEvent","MediaSettingsRange", "MediaRecorder", "MediaEncryptedEvent", "MediaCapabilities","ImageCapture","InputDeviceInfo","captureEvents"])
+    // IDB API
+    names = filterOut(names,["IDBVersionChangeEvent", "IDBTransaction", "IDBRequest", "IDBOpenDBRequest", "IDBObjectStore", "IDBKeyRange", "IDBIndex", "IDBFactory", "IDBDatabase", "IDBCursorWithValue", "IDBCursor"])
+    // Web Audio API
+    names = filterOut(names,["BaseAudioContext","OfflineAudioContext", "OfflineAudioCompletionEvent"])
+    // UIEvent
+    names = filterOut(names,["InputEvent","InputDeviceCapabilities","focus","FocusEvent","blur", "MouseEvent","MouseEvent", "KeyframeEffect", "KeyboardEvent","WheelEvent",, "Keyboard", "KeyboardLayoutMap","UIEvent"])
+    // geolocation-api
+
+    names = filterOut(names,["GeolocationPositionError", "GeolocationPosition", "GeolocationCoordinates", "Geolocation"])
+    // Gamepad API
+    names = filterOut(names,[ "GamepadHapticActuator", "GamepadEvent", "Gamepad", "GamepadButton"])
+    // SVG
+    names = filterOut(names,["SVGUnitTypes", "SVGTransformList", "SVGTransform", "SVGStringList", "SVGRect", "SVGPreserveAspectRatio", "SVGPointList", "SVGPoint", "SVGNumberList", "SVGNumber", "SVGMatrix", "SVGLengthList", "SVGLength", "SVGAnimatedTransformList", "SVGAnimatedString", "SVGAnimatedRect", "SVGAnimatedPreserveAspectRatio", "SVGAnimatedNumberList", "SVGAnimatedNumber", "SVGAnimatedLengthList", "SVGAnimatedLength", "SVGAnimatedInteger", "SVGAnimatedEnumeration", "SVGAnimatedBoolean", "SVGAnimatedAngle", "SVGAngle"])
+    // MIDI
+    names = filterOut(names,["MIDIAccess", "MIDIConnectionEvent", "MIDIInput", "MIDIInputMap", "MIDIMessageEvent", "MIDIOutput", "MIDIOutputMap", "MIDIPort"])
+
+    // web usb
+    names = filterOut(names,[ "USB", "USBAlternateInterface", "USBConfiguration", "USBConnectionEvent", "USBDevice", "USBEndpoint", "USBInterface", "USBInTransferResult", "USBIsochronousInTransferPacket", "USBIsochronousInTransferResult", "USBIsochronousOutTransferPacket", "USBIsochronousOutTransferResult", "USBOutTransferResult"])
+    // TouchEvent
+    names = filterOut(names,[ "TouchList", "TouchEvent", "Touch"])
+    // css
+    {names = filterOut(names,["CSSVariableReferenceValue", "CSSUnparsedValue", "CSSUnitValue", "CSSTranslate", "CSSTransformValue", "CSSTransformComponent", "CSSSupportsRule", "CSSStyleValue", "CSSStyleSheet", "CSSStyleRule", "CSSStyleDeclaration", "CSSSkewY", "CSSSkewX", "CSSSkew"
+,"CSSScale", "CSSRuleList", "CSSRule", "CSSRotate", "CSSPositionValue", "CSSPerspective", "CSSPageRule", "CSSNumericValue", "CSSNumericArray", "CSSNamespaceRule", "CSSMediaRule", "CSSMatrixComponent", "CSSMathValue", "CSSMathSum", "CSSMathProduct", "CSSMathNegate", "CSSMathMin", "CSSMathMax", "CSSMathInvert", "CSSKeywordValue", "CSSKeyframesRule", "CSSKeyframeRule", "CSSImportRule", "CSSImageValue", "CSSGroupingRule", "CSSFontFaceRule", "CSS", "CSSConditionRule"])}
+// DOMTokenList
+{names = filterOut(names,["DOMTokenList","DOMRectReadOnly","DOMRectList","DOMRect","DOMQuad","DOMPointReadOnly","DOMPoint","DOMParser","DOMMatrixReadOnly","DOMMatrix","DOMImplementation","DOMException","CanvasCaptureMediaStreamTrack","DOMError"])}
+// WebXR Device API
+{names = filterOut(names,["XRFrame", "XRInputSource", "XRInputSourceArray", "XRInputSourceEvent", "XRInputSourcesChangeEvent", "XRPose", "XRReferenceSpace", "XRReferenceSpaceEvent", "XRRenderState", "XRRigidTransform", "XRSession", "XRSessionEvent", "XRSpace", "XRSystem", "XRView", "XRViewerPose", "XRViewport", "XRWebGLLayer", "XRHitTestResult", "XRHitTestSource", "XRRay", "XRTransientInputHitTestResult", "XRTransientInputHitTestSource" , "XRBoundedReferenceSpace","XRDOMOverlayState","XRLayer"])}
+//StyleSheet
+{names = filterOut(names,["StyleSheetList", "StyleSheet", "StylePropertyMapReadOnly", "StylePropertyMap"])}
+// Media Capture and Streams ----Error Handling
+{names = filterOut(names,["OverconstrainedError", "navigator","MediaDeviceInfo", "MediaDevices", "MediaKeyMessageEvent", "MediaKeys", "MediaKeySession", "MediaKeyStatusMap", "MediaKeySystemAccess",])}
+// Network Information API
+// names = filterOut(names,[ "TouchList", "TouchEvent", "Touch"])
+names = names.filter(e => e !="NetworkInformation")
+
+//ReadableStream
+{names = filterOut(names,["DecompressionStream", "ReadableStreamDefaultReader", "ReadableStream","CompressionStream","WritableStreamDefaultWriter", "WritableStream", "TransformStream"])}
+// Web Cryptography API
+{names = filterOut(names,["Crypto","CryptoKey","PublicKeyCredential","AuthenticatorAssertionResponse","AuthenticatorAttestationResponse","AuthenticatorResponse","SubtleCrypto","PasswordCredential","Credential","CredentialsContainer"])}
+// Clipboard API and events
+{names = filterOut(names,["ClipboardItem","Clipboard"])}
+
+// web apis
+{names = filterOut(names,["BeforeInstallPromptEvent", "BatteryManager", "XPathResult", "XPathExpression", "XPathEvaluator", "XMLSerializer", "XMLHttpRequestUpload", "XMLHttpRequestEventTarget", "XMLHttpRequest", "VisualViewport", "VTTCue", "URLSearchParams", "URL", "TreeWalker", "TransitionEvent", "TextEvent", "TaskAttributionTiming", "SubmitEvent", "StaticRange", "Selection", "SecurityPolicyViolationEvent", "Screen", "Response", "ResizeObserverEntry", "ResizeObserver", "Request", "ReportingObserver", "Range", "ProgressEvent", "PointerEvent", "PerformanceTiming", "PerformanceServerTiming", "PerformanceResourceTiming", "PerformancePaintTiming", "PerformanceObserverEntryList", "PerformanceObserver", "PerformanceNavigationTiming", "PerformanceNavigation", "PerformanceMeasure", "PerformanceMark", "PerformanceLongTaskTiming", "PerformanceEventTiming", "PerformanceEntry", "PerformanceElementTiming", "Performance", "NodeList", "NodeIterator", "NodeFilter", "NamedNodeMap", "MutationRecord", "MutationObserver", "MutationEvent", "MediaQueryListEvent", "MediaQueryList", "MediaList", "LayoutShift", "LargestContentfulPaint", "IntersectionObserverEntry", "IntersectionObserver", "IdleDeadline", "Headers", "HTMLOptionsCollection", "HTMLFormControlsCollection", "HTMLCollection", "FormData", "FontFaceSetLoadEvent", "FontFace", "FileReader", "FileList", "File", "EventTarget", "Event", "ElementInternals", "CustomEvent", "CountQueuingStrategy", "CompositionEvent", "ClipboardEvent", "ByteLengthQueuingStrategy", "Blob", "AnimationEvent", "AnimationEffect", "Animation","AbortSignal", "AbortController", "WebKitCSSMatrix", "WebKitMutationObserver","event","BackgroundFetchManager", "BackgroundFetchRecord", "BackgroundFetchRegistration","TrustedHTML", "TrustedScript", "TrustedScriptURL", "TrustedTypePolicy", "TrustedTypePolicyFactory", "UserActivation", "AnimationPlaybackEvent"])}
+
+// Web Bluetooth
+{names = filterOut(names,["Bluetooth", "BluetoothCharacteristicProperties", "BluetoothDevice", "BluetoothRemoteGATTCharacteristic", "BluetoothRemoteGATTDescriptor", "BluetoothRemoteGATTServer", "BluetoothRemoteGATTService", "XRBoundedReferenceSpace","BluetoothUUID"])}
+
+// DeviceOrientation Event Specification
+{names = filterOut(names,["DeviceMotionEvent", "DeviceMotionEventAcceleration", "DeviceMotionEventRotationRate", "DeviceOrientationEvent"])}
+
+// Payment Request API
+{names = filterOut(names,["PaymentMethodChangeEvent", "PaymentAddress", "PaymentRequest", "PaymentResponse", "Presentation", "PresentationAvailability", "PresentationConnection", "PresentationConnectionAvailableEvent", "PresentationConnectionCloseEvent", "PresentationConnectionList", "PresentationReceiver", "PresentationRequest"])}
+// Media Playback Quality
+{names = filterOut(names,["VideoPlaybackQuality"])}
+// Service Workers Nightly
+{names = filterOut(names,["ServiceWorker", "ServiceWorkerContainer", "ServiceWorkerRegistration"])}
+// Generic Sensor API
+{names = filterOut(names,["Sensor","SensorErrorEvent","Accelerometer", "OrientationSensor","RelativeOrientationSensor", "AbsoluteOrientationSensor","Gyroscope","LinearAccelerationSensor"])}
+// storagemanager
+{names = filterOut(names,["StorageManager","sessionStorage", "localStorage","caches","Cache","CacheStorage"])}
+// RTCIceTransport
+{names = filterOut(names,["RTCIceTransport"])}
+// Service Workers Nightly 
+{names = filterOut(names,["NavigationPreloadManager"])}
+
+// Web Locks API
+{names = filterOut(names,["Lock","LockManager"])}
+//Web Speech API
+{names = filterOut(names,["SpeechSynthesisErrorEvent", "SpeechSynthesisEvent", "SpeechSynthesisUtterance", "speechSynthesis"])}
+// Worklets
+{names = filterOut(names,["Worklet"])}
+// Push API
+{names = filterOut(names,["PushManager", "PushSubscription", "PushSubscriptionOptions"])}
+// Payment Request API
+{names = filterOut(names,["PaymentInstruments", "PaymentManager", "PaymentRequestUpdateEvent"])}
+// Browser
+{names = filterOut(names,["Permissions", "PermissionStatus"])}
+// Screen Wake Lock API
+{names = filterOut(names,["WakeLock", "WakeLockSentinel"])}
+// https://w3c.github.io/mediasession/#the-mediametadata-interface
+{names = filterOut(names,["MediaMetadata", "MediaSession"])}
+console.log(names);
+    </script>
+</body>
+</html>
