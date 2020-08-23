@@ -85,11 +85,12 @@ let names =Object.getOwnPropertyNames(window)
 ```ruby
 {
     let interfaces = new Set();
-    objects = ["ApplicationCache", "AudioTrack", "AudioTrackList", "BarProp", "BeforeUnloadEvent", "BroadcastChannel", "CanvasGradient", "CanvasPattern", "CanvasRenderingContext2D", "CloseEvent", "CustomElementRegistry", "DOMStringList", "DOMStringMap", "DataTransfer", "DataTransferItem", "DataTransferItemList", "DedicatedWorkerGlobalScope", "Document", "DragEvent", "ErrorEvent", "EventSource", "External", "FormDataEvent", "HTMLAllCollection", "HashChangeEvent", "History", "ImageBitmap", "ImageBitmapRenderingContext", "ImageData", "Location", "MediaError", "MessageChannel", "MessageEvent", "MessagePort", "MimeType", "MimeTypeArray", "Navigator", "OffscreenCanvas", "OffscreenCanvasRenderingContext2D", "PageTransitionEvent", "Path2D", "Plugin", "PluginArray", "PopStateEvent", "PromiseRejectionEvent", "RadioNodeList", "SharedWorker", "SharedWorkerGlobalScope", "Storage", "StorageEvent", "TextMetrics", "TextTrack", "TextTrackCue", "TextTrackCueList", "TextTrackList", "TimeRanges", "TrackEvent", "ValidityState", "VideoTrack", "VideoTrackList", "WebSocket", "Window", "Worker", "WorkerGlobalScope", "WorkerLocation", "WorkerNavigator","BeforeInstallPromptEvent","TransitionEvent", "TextEvent","BackgroundFetchManager", "BackgroundFetchRecord", "BackgroundFetchRegistration","TrustedHTML", "TrustedScript", "TrustedScriptURL", "TrustedTypePolicy", "TrustedTypePolicyFactory", "UserActivation", "AnimationPlaybackEvent"];
+    objects = ["ApplicationCache", "AudioTrack", "AudioTrackList", "BarProp", "BeforeUnloadEvent", "BroadcastChannel", "CanvasGradient", "CanvasPattern", "CanvasRenderingContext2D", "CloseEvent", "CustomElementRegistry", "DOMStringList", "DOMStringMap", "DataTransfer", "DataTransferItem", "DataTransferItemList", "DedicatedWorkerGlobalScope", "Document", "DragEvent", "ErrorEvent", "EventSource", "External", "FormDataEvent", "HTMLAllCollection", "HashChangeEvent", "History", "ImageBitmap", "ImageBitmapRenderingContext", "ImageData", "Location", "MediaError", "MessageChannel", "MessageEvent", "MessagePort", "MimeType", "MimeTypeArray", "Navigator", "OffscreenCanvas", "OffscreenCanvasRenderingContext2D", "PageTransitionEvent", "Path2D", "Plugin", "PluginArray", "PopStateEvent", "PromiseRejectionEvent", "RadioNodeList", "SharedWorker", "SharedWorkerGlobalScope", "Storage", "StorageEvent", "TextMetrics", "TextTrack", "TextTrackCue", "TextTrackCueList", "TextTrackList", "TimeRanges", "TrackEvent", "ValidityState", "VideoTrack", "VideoTrackList", "WebSocket", "Window", "Worker", "WorkerGlobalScope", "WorkerLocation", "WorkerNavigator","BeforeInstallPromptEvent","TransitionEvent", "TextEvent","BackgroundFetchManager", "BackgroundFetchRecord", "BackgroundFetchRegistration","TrustedHTML", "TrustedScript", "TrustedScriptURL", "TrustedTypePolicy", "TrustedTypePolicyFactory", "UserActivation", "AnimationPlaybackEvent","XR", "fetch"];
     objects.forEach(o => interfaces.add(o));
 
     names = names.filter(e => !interfaces.has(e));
 }
+names = filterOut
 ```
 ## 8、Intl
 它属于 ECMA402 标准，这份标准是 JavaScript 的一个扩展，它包含了国际化相关的内容（http://www.ecma-international.org/ecma-402/5.0/index.html#TitleECMA402）
@@ -334,7 +335,7 @@ ECMAScript标准内置对象的规则（[ECMA-262]，第17节）在本节中有�
 新的内部对象%OverconstrainedError%和%OverconstrainedErrorPrototype%都是可用的，就好像它们已经包含在（[ECMA-262]，表7）和所有引用部分（例如，[ECMA-262]，第8.2.2节）中一样，因此行为适当。
 
  ```ruby
-{names = filterOut(names,["OverconstrainedError", "navigator","MediaDeviceInfo", "MediaDevices", "MediaKeyMessageEvent", "MediaKeys", "MediaKeySession", "MediaKeyStatusMap", "MediaKeySystemAccess",])}
+{names = filterOut(names,["OverconstrainedError","MediaDeviceInfo", "MediaDevices", "MediaKeyMessageEvent", "MediaKeys", "MediaKeySession", "MediaKeyStatusMap", "MediaKeySystemAccess",])}
 ```
 
 ## 31、Network Information API
@@ -376,7 +377,7 @@ This specification describes an additional rendering context and support objects
 本规范描述了一个JavaScript API，用于在web应用程序中执行基本的加密操作，例如散列、签名生成和验证以及加密和解密。此外，它描述了一个应用程序API，用于生成和/或管理执行这些操作所需的键控材料。此API的用途包括用户或服务身份验证、文档或代码签名以及通信的机密性和完整性。
 
  ```ruby
- {names = filterOut(names,["Crypto","CryptoKey","PublicKeyCredential","AuthenticatorAssertionResponse","AuthenticatorAttestationResponse","AuthenticatorResponse","SubtleCrypto","PasswordCredential","Credential","CredentialsContainer"])}
+ {names = filterOut(names,["Crypto","CryptoKey","PublicKeyCredential","AuthenticatorAssertionResponse","AuthenticatorAttestationResponse","AuthenticatorResponse","SubtleCrypto","PasswordCredential","Credential","CredentialsContainer", "crypto"])}
 ``` 
 
 ## 35、Clipboard API and events
@@ -565,4 +566,10 @@ The XMLHttpRequest Standard defines an API that provides scripted client functio
 ```ruby
 {names = filterOut(names,["MediaMetadata", "MediaSession"])}
 ```
-以上是目前一整理的API 还是有104 个没有整理完
+以上是目前一整理的API 还是有104 个没有整理完 但是再windows环境下只剩下93个属性
+## css om
+参考：https://drafts.csswg.org/cssom-view/
+CSSOM View Module
+```ruby
+{names=filterOut(names, ["parent", "opener", "top", "length", "frames", "closed", "location", "self", "window", "document", "name", "customElements", "history", "locationbar", "menubar", "personalbar", "scrollbars", "statusbar", "toolbar", "status", "frameElement", "navigator", "origin", "external", "screen", "innerWidth", "innerHeight", "scrollX", "pageXOffset", "scrollY", "pageYOffset", "visualViewport", "screenX", "screenY", "outerWidth", "outerHeight", "devicePixelRatio", "clientInformation", "offscreenBuffering", "screenLeft", "screenTop", "defaultStatus", "defaultstatus", "styleMedia", "isSecureContext", "performance", "stop", "open", "alert", "confirm", "prompt", "print", "queueMicrotask", "requestAnimationFrame", "cancelAnimationFrame", "releaseEvents", "requestIdleCallback", "cancelIdleCallback", "getComputedStyle", "matchMedia", "moveTo", "moveBy", "resizeTo", "resizeBy", "scroll", "scrollTo", "scrollBy", "getSelection", "find", "btoa", "atob", "setTimeout", "clearTimeout", "setInterval", "clearInterval", "createImageBitmap", "close", "postMessage", "indexedDB", "chrome", "WebAssembly", "XSLTProcessor", "Notification", "EnterPictureInPictureEvent", "PictureInPictureWindow", "RemotePlayback", "openDatabase", "applicationCache", "ApplicationCacheErrorEvent", "FederatedCredential", "filterOut"])}
+```
