@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TicTacToe 事件监听</title>
+    <style>
+       .cell{
+        width:100px;
+        height: 100px;
+        background-color: #eee;;
+        display: inline-block;
+        border:1px solid #ccc;
+        vertical-align: middle;
+
+        line-height: 100px;
+        text-align: center;
+        font-size: 50px;;
+       }
+
+    </style>
+</head>
+<body>
+    <div id="board"></div>
+    <script>
+        /*棋盘：3x3方格
+        双方分别持有叉子和圆圈两种棋子
+        双方交替落子
+        率先连城3子直线的获胜
+        *声明一个2为数组表示棋盘的状态和位置
+        人的对战部分
+        输赢的判断
+        */
+        let pattern = [
+            [2, 0, 0],
+            [0, 1, 0],
+            [0, 0, 0]
+        ]
+        console.log(pattern)
+
+        let color = 1;
+
+        function show(){
+            let board = document.getElementById("board");
+
+            board.innerHTML = "";
+            
+            for(let i = 0;i < 3; i++){
+                for(let j=0; j< 3; j++){
+                    let cell = document.createElement("div");
+                    cell.classList.add("cell");
+                    cell.innerText = 
+                        pattern[j][i] == 2 ? "X": 
+                         (pattern[i][j] == 1 ? "O": "");
+                    cell.addEventListener("click",()=>move(j,i));
+                    
+                    board.appendChild(cell);
+                }
+                //换行可以用加br 或者给board一个固定宽度实现
+                board.appendChild(document.createElement("br"));
+            }
+        }
+
+        // 定义move函数
+        function move(x,y){
+            pattern[y][x] = color;
+            if(check()){
+                alert(color == 2 ? "X is winner!" : "O is winner!");
+            }
+            color = 3-color;
+            show();
+            
+        }
+
+        function check(){
+        // 判断同一行是不是一样的
+            for(let i=0; i<3; i++){
+                let win = true;
+                for(let j =0; j<3; j++){
+                    if(pattern[i][j] !== color){
+                        win =false;
+                    }
+                }
+                if(win)
+                    return true;
+            }
+
+            // 判断同一列是不是一样的
+            for(let i=0; i<3; i++){
+                let win = true;
+                for(let j =0; j<3; j++){
+                    if(pattern[j][i] !== color){
+                        win =false;
+                    }
+                }
+                if(win)
+                    return true;
+            }
+
+            // 斜向
+            // i=j
+            {
+                let win = true;
+                for(let i=0 ;i< 3; i++){
+                    if(pattern[i][i] !== color){
+                        win = false;
+                    }
+                }
+                if(win)
+                    return true;
+            }
+
+            {
+                let win = true;
+                for(let j=0 ;j< 3; j++){
+                    if(pattern[j][2-j] !== color){
+                        win = false;
+                    }
+                }
+                if(win)
+                    return true;
+            }
+
+        }
+        
+
+        show(pattern);
+    </script>
+</body>
+</html>
