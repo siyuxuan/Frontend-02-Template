@@ -43,7 +43,7 @@
                     let cell = document.createElement("div");
                     cell.classList.add("cell");
                     cell.innerText = 
-                        pattern[j][i] == 2 ? "X": 
+                        pattern[i][j] == 2 ? "X": 
                          (pattern[i][j] == 1 ? "O": "");
                     board.appendChild(cell);
                 }

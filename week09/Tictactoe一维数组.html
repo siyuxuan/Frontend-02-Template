@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>一维数组</title>
+    <style>
+       .cell{
+        width:100px;
+        height: 100px;
+        background-color: #eee;;
+        display: inline-block;
+        border:1px solid #ccc;
+        vertical-align: middle;
+
+        line-height: 100px;
+        text-align: center;
+        font-size: 50px;;
+       }
+
+    </style>
+</head>
+<body>
+    <div id="board"></div>
+    <script>
+        /*
+       一维数组实现tictactoe
+
+        */
+        let pattern = [
+            0, 0, 0,
+            0, 0, 0,
+            0, 0, 0
+        ]
+        // console.log(pattern)
+
+        let color = 1;
+
+        function show(){
+            let board = document.getElementById("board");
+
+            board.innerHTML = "";
+            
+            for(let i = 0;i < 3; i++){
+                for(let j=0; j< 3; j++){
+                    let cell = document.createElement("div");
+                    cell.classList.add("cell");
+                    cell.innerText = 
+                        pattern[i*3+j] == 2 ? "X": 
+                        pattern[i*3+j] == 1 ? "O": "";
+                    cell.addEventListener("click",()=>move(j,i));
+                    
+                    board.appendChild(cell);
+                }
+                //换行可以用加br 或者给board一个固定宽度实现
+                board.appendChild(document.createElement("br"));
+            }
+        }
+
+        // 定义move函数
+        function move(x,y){
+            pattern[y*3+x] = color;
+            if(check(pattern,color)){
+                alert(color == 2 ? "X is winner!" : "O is winner!");
+            }
+            color = 3-color;
+            console.log(bestChoice(pattern,color));
+            show();
+            
+        }
+
+        function check(pattern,color){
+        // 判断同一行是不是一样的
+            for(let i=0; i<3; i++){
+                let win = true;
+                for(let j =0; j<3; j++){
+                    if(pattern[i*3+j] !== color){
+                        win =false;
+                    }
+                }
+                if(win)
+                    return true;
+            }
+
+            // 判断同一列是不是一样的
+            for(let i=0; i<3; i++){
+                let win = true;
+                for(let j =0; j<3; j++){
+                    if(pattern[i*3+j] !== color){
+                        win =false;
+                    }
+                }
+                if(win)
+                    return true;
+            }
+
+            // 斜向
+            // i=j
+            {
+                let win = true;
+                for(let i=0 ;i< 3; i++){
+                    if(pattern[i*3+i] !== color){
+                        win = false;
+                    }
+                }
+                if(win)
+                    return true;
+            }
+
+            {
+                let win = true;
+                for(let j=0 ;j< 3; j++){
+                    if(pattern[j*3+2-j] !== color){
+                        win = false;
+                    }
+                }
+                if(win)
+                    return true;
+            }
+
+        }
+        
+        // 为了避免原来的pattern 克隆
+        function clone(pattern){
+            // return JSON.parse(JSON.stringify(pattern));
+            // 利用javaScript原型机制执行了create函数 创建了一个对象 完美克隆pattern对象
+            return Object.create(pattern);
+        }
+        function willWin(pattern,color){
+            for(let i = 0;i<3;i++){
+                for(let j=0;j<3;j++){
+                    if(pattern[i*3+j])
+                        continue;
+                    let tmp =clone(pattern);
+                    tmp[i*3+j] = color;
+                    if(check(tmp ,color)){
+                        return [i,j];
+                    }
+                }
+            }
+            return null;
+        }
+
+        /*
+        * 策略：
+        * 第一层 ： 我要赢
+        * 第二层： 别输 
+        * 第三层…………
+        result :输-1 和局 0 赢 1
+        */
+        function bestChoice(pattern,color){
+            let point = willWin(pattern,color);
+            if(point){
+                return{
+                    point:point,
+                    result:1
+                }
+            }
+
+            // 初始化
+            let result = -1;
+
+            outer:for(let i = 0;i<3;i++){
+                for(let j=0;j<3;j++){
+                    if(pattern[i*3+j] !== 0)
+                        continue;
+                    let tmp =clone(pattern);
+                    tmp[i*3+j] = color;
+                    let opp = bestChoice(tmp, 3-color);
+
+                   if(opp.result >= result){
+                       point = [j,i];
+                       result = -opp.result;
+                   }
+
+                   if(result == 1){
+                       break outer;
+                   }
+                }
+            }
+            
+            return{
+                point:point,
+                result: point ? result:0
+            }
+
+
+        }
+        show(pattern);
+
+        console.log(bestChoice(pattern,color))
+    </script>
+</body>
+</html>

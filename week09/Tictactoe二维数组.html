@@ -30,13 +30,15 @@
         *声明一个2为数组表示棋盘的状态和位置
         人的对战部分
         输赢的判断
+        shhow 之后检查是否要胜利了
+       
         */
         let pattern = [
             [2, 0, 0],
             [0, 1, 0],
             [0, 0, 0]
         ]
-        console.log(pattern)
+        // console.log(pattern)
 
         let color = 1;
 
@@ -51,9 +53,8 @@
                     cell.classList.add("cell");
                     cell.innerText = 
                         pattern[i][j] == 2 ? "X": 
-                        pattern[i][j] == 1 ? "O": "";
-                    // 添加监听
-                    cell.addEventListener("click",()=>move(i,j));
+                         (pattern[i][j] == 1 ? "O": "");
+                    cell.addEventListener("click",()=>move(j,i));
                     
                     board.appendChild(cell);
                 }
@@ -64,17 +65,20 @@
 
         // 定义move函数
         function move(x,y){
-            console.log(x,y)
-            pattern[x][y] = color;
-            if(check()){
+            pattern[y][x] = color;
+            if(check(pattern,color)){
                 alert(color == 2 ? "X is winner!" : "O is winner!");
             }
             color = 3-color;
             show();
+            // 检查是否要胜利了
+            if(willWin(pattern,color)){
+                console.log(color == 2 ? "X will win!" : "O will win!");
+            }
             
         }
 
-        function check(){
+        function check(pattern,color){
         // 判断同一行是不是一样的
             for(let i=0; i<3; i++){
                 let win = true;
@@ -125,8 +129,70 @@
 
         }
         
+        // 为了避免原来的pattern 克隆
+        function clone(pattern){
+            return JSON.parse(JSON.stringify(pattern));
+        }
+        function willWin(pattern,color){
+            for(let i = 0;i<3;i++){
+                for(let j=0;j<3;j++){
+                    if(pattern[i][j])
+                        continue;
+                    let tmp =clone(pattern);
+                    tmp[i][j] = color;
+                    if(check(tmp ,color)){
+                        return [i,j];
+                    }
+                }
+            }
+            return null;
+        }
 
+        /*
+        * 策略：
+        * 第一层 ： 我要赢
+        * 第二层： 别输 
+        * 第三层…………
+        result :输-1 和局 0 赢 1
+        */
+        function bestChoice(pattern,color){
+            let p;
+            if(p = willWin(pattern, color)){
+                return{
+                    point:p,
+                    result:1
+                }
+            }
+
+            // 初始化
+            let result = -2;
+            let point = null;
+
+            for(let i = 0;i<3;i++){
+                for(let j=0;j<3;j++){
+                    if(pattern[i][j])
+                        continue;
+                    let tmp =clone(pattern);
+                    tmp[i][j] = color;
+                    let r = bestChoice(tmp, 3-color).result;
+
+                    if(-r > result){
+                        result = -r;
+                        point =[i,j];
+                    }
+                }
+            }
+            
+            return{
+                point:point,
+                result: point ? result:0
+            }
+
+
+        }
         show(pattern);
+
+        console.log(bestChoice(pattern,color))
     </script>
 </body>
 </html>
