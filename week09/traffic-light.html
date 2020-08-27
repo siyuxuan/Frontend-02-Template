@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>async异步编程 红绿灯</title>
+    <style>
+        .main{position: relative; width: 500px; height: 300px; margin:100px auto;background-color: #fff;box-shadow: -2px -2px 2px #efefef, 5px 5px 5px #b9b9b9;}
+        .main h2{text-align: center;line-height: 50px;background-color: #c7e7f7;box-shadow: 0 2px 8px rgba(0,0,0,.3);}
+
+        .lamp{width: 100px;height: 100px;border-radius:50%;margin:50px 0px 0 40px; display:inline-block;background-color:#ccc;}
+
+        .lampG{background-color: green;}
+
+        .lampY{background-color: yellow;}
+
+        .lampR{background-color: red;}
+    </style>
+</head>
+<body>
+    
+    <div class="main" id="main">
+        <h2>async异步编程 红绿等</h2>
+        <div class="lamp"></div>
+        <div class="lamp"></div>
+        <div class="lamp"></div>
+    </div>
+
+    <script>
+        /*
+        一个路口的红绿灯，按照绿灯10s，黄灯2 ，红灯5s秒
+        */
+        let lamps = document.getElementsByClassName("lamp");
+
+// setTimeout 方法实现红绿灯
+/*
+        function changeColor(nodes,color,index){
+            console.log('traffic-light ', color);
+            for(let i=0;i<nodes.length;i++){
+                nodes[i].style.backgroundColor='#ccc';
+            }
+            nodes[index].style.backgroundColor=color;
+        }
+
+       function main(){
+           changeColor(lamps,'green',0);
+           setTimeout(() => {
+            changeColor(lamps,'yellow',1);
+                setTimeout(() => {
+                    changeColor(lamps,'red',2);
+                    setTimeout(() => main, 5000);
+                }, 2000);
+           }, 10000);
+       }
+
+       main();*/
+
+    //    Promise 实现
+    /*
+    function sleep(duration){
+        return new Promise(resolve => {
+            setTimeout(resolve,duration);
+        })
+    }
+
+    function changeColor(duration,nodes,color,index){
+            return new Promise(resolve => {
+                console.log('traffic-light ', color);
+                 for(let i=0;i<nodes.length;i++){
+                    nodes[i].style.backgroundColor='#ccc';
+                }
+                nodes[index].style.backgroundColor=color;
+                sleep(duration).then(resolve);
+
+            })
+        }
+
+    function main() {
+        return new Promise(resolve => {
+            changeColor(10000, lamps,'green',0).then(() => {
+                changeColor(2000, lamps,'yellow',1).then(() => {
+                    changeColor(5000,lamps, 'red',2).then(() => {
+                        main();
+                    })
+                })
+            })
+        })
+    }
+    main();
+    */
+    // async await 实现
+    function sleep(duration){
+        return new Promise(resolve => {
+            setTimeout(resolve,duration);
+        })
+    }
+
+    async function changeColor(duration,nodes,color,index){
+            return new Promise(resolve => {
+                console.log('traffic-light ', color);
+                 for(let i=0;i<nodes.length;i++){
+                    nodes[i].style.backgroundColor='#ccc';
+                }
+                nodes[index].style.backgroundColor=color;
+                sleep(duration).then(resolve);
+
+            })
+    }
+
+    async function main(){
+        while(true){
+            await changeColor(10000, lamps,'green',0);
+            await changeColor(2000, lamps,'yellow',1)
+            await changeColor(5000,lamps, 'red',2);
+        }
+    }
+
+    main();
+    </script>
+</body>
+</html>

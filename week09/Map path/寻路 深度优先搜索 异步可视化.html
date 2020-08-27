@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>寻路算法</title>
+    <style>
+        .cell{
+            width: 6px;
+            height: 6px;
+            line-height: 6px;
+            background-color: gray;
+            border-bottom: 1px solid #fff;
+            border-right: 1px solid #FFF;
+            vertical-align: top;
+            float: left;
+            /* font-size: 0; */
+            
+
+        }
+
+        #container{
+            width: 701px;
+            overflow: hidden;
+            }
+    </style>
+</head>
+<body>
+    <div id="container"></div>
+    <button onclick="localStorage['map'] = JSON.stringify(map)">save</button>
+ 
+    <script>
+
+        let map = localStorage["map"] ? JSON.parse(localStorage["map"]): Array(10000).fill(0);
+        // console.log(map);
+
+        let container = document.getElementById("container");
+        // 有墙 1 没墙0
+        for(let y = 0 ; y < 100; y++){
+            for(let x = 0; x<100; x++){
+                let cell =  document.createElement("div");
+                cell.classList.add("cell");
+
+                if(map[100*y +x] == 1)
+                    cell.style.backgroundColor = "red";
+
+                
+                cell.addEventListener("mousemove", () => {
+                    // alert("move")
+                    if(mousedown){
+                        if(clear) {
+                            cell.style.backgroundColor = "";
+                            map[100*y+x] =0;
+                        }else{
+                            cell.style.backgroundColor = "red";
+                            map[100*y+x] =1;
+                        }
+                    }
+                })
+                container.appendChild(cell);
+            }
+        }
+
+        let mousedown = false;
+        let clear =false;
+        //检查是不是右键
+        document.addEventListener("mousedown", e => {
+            console.log(e.clientX,e.clientY);
+            mousedown = true;
+            clear = (e.which === 3);
+            console.log(e.which);
+            
+        });
+
+        document.addEventListener("mouseup", () => mousedown = false);
+
+        document.addEventListener("contextmenu", e => e.preventDefault());
+
+        function sleep(t){
+            return new Promise((resolve,reject) =>{
+                setTimeout(resolve,t)
+            })
+        }
+
+        async function path(map, start, end){
+            var queue = [start];
+
+           async function insert(x, y){
+                if(x < 0 || x >= 100 || y < 0 || y >=100 )
+                    return;
+                
+                if(map[y * 100 + x ])
+                    return;
+                await sleep(30);
+                container.children[y * 100 + x].style.backgroundColor ="lightgreen";
+                map[y * 100 + x ] = 2;
+                queue.push([x,y]);
+            }
+
+            console.log(`queue:${queue}`)
+            while(queue.length){
+                let [x, y] = queue.pop();
+                // console.log(x,y);
+                if(x === end[0] && y === end[1]){
+                    return true;
+                }
+
+               await  insert(x-1, y);
+               await  insert(x, y-1);
+               await  insert(x, y+1);
+               await  insert(x+1, y);
+            }
+            return false;
+        }
+
+    </script>
+</body>
+</html>

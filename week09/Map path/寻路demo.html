@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<style>
+    .cell{
+        display: inline-block;
+        width: 6px;
+        height: 6px;
+        background-color: gray;
+        border-bottom: 1px solid white;
+        border-right: 1px solid white;
+        vertical-align: middle;
+    }
+    #container{
+        width:701px;
+        line-height: 0;
+    }
+    .black{
+        background-color: black;
+    }
+</style>
+<div id="container"></div>
+<button onclick="localStorage.map = JSON.stringify(map)">save</button>
+<script>
+    // A star 启发式搜索
+    // 如果把直线距离作为启发函数最小的点，一定能找到最短路径。
+    // 需要新数据结构，每次吐出最小的点，应该用二叉堆，binary heap
+    // 先用无序数组
+    class Sorted{
+        constructor(data, compare){
+            this.data = data;
+            this.compare = compare;
+        }
+        take(){ 
+            if(!this.data.length)
+                return;
+            let min = this.data[0];
+            let minIndex = 0;
+            for(let i = 1; i < this.data.length; i++){
+                if(this.compare(this.data[i], min) < 0){
+                    min = this.data[i];
+                    minIndex = i; 
+                }
+            }
+            this.data[minIndex] = this.data[this.data.length-1];
+            this.data.pop();
+            return min;
+        }
+        insert(v){
+            this.data.push(v);
+        }
+        get length(){
+            return this.data.length;
+        }
+    }
+
+    var map = localStorage.map ? JSON.parse(localStorage.map) : new Array(10000).fill(0);
+    //var map = new Array(10001).join(0).split('')
+    //下边是获得自然数队列
+    //var map = Array.from({length:10000}).map((v, i) => i)
+    //var map = Array.from(new Array(10000).keys())
+
+    let container = document.getElementById('container');
+    for(let y = 0; y < 100; y++){
+        for(let x = 0; x < 100; x++){
+            let cell = document.createElement('div');
+            cell.classList.add('cell');
+
+            if(map[y * 100 + x] === 1)
+                cell.classList.add("black");
+
+            cell.addEventListener("mousemove", () => {
+                if(mouse)
+                    if(clear){
+                        cell.classList.remove("black");
+                        map[y * 100 + x] = 0;
+                    }else{
+                        cell.classList.add("black");
+                        map[y * 100 + x] = 1;
+                    } 
+            })
+
+            container.appendChild(cell);
+        }
+    }
+
+    let mouse = false;
+    let clear = false;
+    document.addEventListener('mousedown', e => {
+        mouse = true;
+        clear = (e.which === 3); // 左键1 右键3 中键2
+    });
+    document.addEventListener('mouseup', () => mouse = false);
+    document.addEventListener('contextmenu', e => e.preventDefault());
+
+    async function sleep(time){
+        return new Promise((resolve, reject) =>{
+            setTimeout(resolve, time);
+        })
+    }
+
+
+    async function findPath(map, start, end){
+        map = map.slice();
+
+        function distance([x, y]){
+            return (x - end[0]) ** 2 + (y - end[1]) ** 2;
+        }
+
+        let collection = new Sorted([start], (a, b) => distance(a) - distance(b)); // 比较距离终点更近的点
+
+        container.children[100 * start[1] + start[0]].style.backgroundColor = "red";
+        container.children[100 * end[1] + end[0]].style.backgroundColor = "red";
+        
+        while(collection.length){
+            let [x, y] = collection.take();   // 拿出距离终点最近的点，并从collection中删除
+            //console.log(x,y)
+            async function insert([x, y], pre){
+                if(map[100 * y + x] !== 0) // 遇到障碍
+                    return;
+                if(x < 0 || y < 0 || x >= 100 || y >= 100) // 遇到边界
+                    return;
+
+                map[100 * y + x] = pre;
+                container.children[100 * y + x].style.backgroundColor = "lightgreen";
+                await sleep(1);
+                collection.insert([x, y]);
+            }
+
+            if(x === end[0] && y === end[1]){
+                //return true;
+                let path = [];
+                while(x !== start[0] || y !== start[1]){
+                    path.push([x, y]);
+                    await sleep(30);
+                    container.children[y * 100 + x].style.backgroundColor = "pink";
+                    [x, y] = map[y * 100 + x];
+                }
+                return path;
+            }
+
+            await insert([x - 1, y], [x, y]);
+            await insert([x + 1, y], [x, y]);
+            await insert([x, y - 1], [x, y]);
+            await insert([x, y + 1], [x, y]);
+
+            // 斜线逻辑
+            await insert([x - 1, y - 1], [x, y]);
+            await insert([x + 1, y - 1], [x, y]);
+            await insert([x - 1, y + 1], [x, y]);
+            await insert([x + 1, y + 1], [x, y]);
+        }
+        return null;
+    }
+</script>
