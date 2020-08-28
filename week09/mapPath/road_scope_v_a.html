@@ -142,7 +142,7 @@
                     while( x != start[0] || y != start[1]){
                         path.push(map[y * 100 + x]);
                         [x, y] = table[y * 100 +x];
-                        container.children[ y * 100 + x].style.backgroundColor = "purple"
+                        container.children[ y * 100 + x].style.backgroundColor = "purple";
                     }
                     console.log(path);
                     return path;

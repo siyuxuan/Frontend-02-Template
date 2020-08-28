@@ -1,4 +1,5 @@
-<!DOCTYPE html>
+
+ <!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -36,7 +37,14 @@
     // 如果把直线距离作为启发函数最小的点，一定能找到最短路径。
     // 需要新数据结构，每次吐出最小的点，应该用二叉堆，binary heap
     // 先用无序数组
-        class Sorted {
+    //默认小顶堆：
+    //      0
+    //      /\
+    //     1  4
+    //    /\  /\
+    //   6 9  5 7
+
+     class BinaryHeap {
             constructor(data, compare) {
                 this.data = data.slice();
                 this.compare = compare || ((a, b) => a - b)
@@ -47,26 +55,68 @@
                 if (!this.data.length)
                     return;
                 let min = this.data[0];
-                let minIndex = 0;
-                // console.log( this.data.length)
-                for (let i = 1; i < this.data.length; i++) {
-                    if (this.compare(this.data[i], min) < 0) {
-                        min = this.data[i];
-                        minIndex = i;
+                let i = 0;
+
+                while(i < this.data.length){
+                    // 叶子节点的位置 
+                    // i*2+1 i*2+2 
+                    // 只有一个叶子
+                    if(i * 2 + 1 >= this.data.length){
+                        this.data[i] = this.data[i *2 +1];
+                        i = i * 2 + 1;
+                        break;
+                    }
+
+                    if(this.compare(this.data[i * 2 +1],this.data[i * 2 + 2] < 0)){
+                        this.data[i] = this.data[i* 2 +1];
+                        i = i * 2 +1;
+
+                    }else{
+                        this.data[i] = this.data[i* 2 +2];
+                        i = i * 2 + 2;
                     }
                 }
+                if( i < this.data.length-1){
+                    // 如果最后一层有空洞不在heap data最后的位置，那么把最后一个挪到空洞位置。
+                    this.insertAt(i, this.data.pop());
+                }else{
+                    // 如果空洞在heap data最后位置，那直接把这个空洞删除掉即可。
+                    this.data.pop();
+                }
+                return min ;
+            }
+            
+            insertAt(i,v){
+                this.data[i] = v;
+                while(i > 0 && this.compare(v , this.data[Math.floor((i-1)/2)])<0){
+                    this.data[i] = this.data[Math.floor((i-1)/2)];
+                    this.data[Math.floor((i-1)/2)] = v;
 
-                this.data[minIndex] = this.data[this.data.length - 1];
-                this.data.pop();
-                return min;
+                    i = Math.floor((i-1)/2);// 位置切换到父级位置继续循环
+
+                }
             }
 
-            // write
-            give(v) {
-                this.data.push(v);
+            insert(v){
+                this.insertAt(this.data.length, v);
             }
 
+            get length(){
+                return this.data.length;
+            }
         }
+
+// heap 测试
+        // var heap = new BinaryHeap([],(a, b) => a-b);
+        // heap.insert(3)
+        // heap.insert(5)
+        // heap.insert(2)
+        // heap.insert(7)
+        // heap.insert(22)
+        // heap.insert(9)
+        // heap.insert(0)
+        // heap.insert(6)
+        // console.log(heap);
 
         let map = localStorage["map"] ? JSON.parse(localStorage["map"]) : Array(10000).fill(0);
         // console.log(map);
