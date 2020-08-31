@@ -171,7 +171,7 @@
         async function findPath(map, start, end) {
             // 克隆map
             let table = Object.create(map);
-            var queue = new Sorted([start],(a, b) => distance(a) - distance(b));
+            var collection = new BinaryHeap([start],(a, b) => distance(a) - distance(b));
 
             container.children[100 * start[1] + start[0]].style.backgroundColor = "blue";
             container.children[100 * end[1] + end[0]].style.backgroundColor = "red";
@@ -185,16 +185,15 @@
                 await sleep(30);
                 container.children[y * 100 + x].style.backgroundColor ="lightgreen";
                 table[y * 100 + x ] = pre;
-                queue.give([x,y]);
+                collection.give([x,y]);
             }
 
             function distance(point){
                 return (point[0] - end[0]) ** 2 + (point[1]- end[1]) ** 2;
             }
-            // console.log(queue.length)
-            while(queue.data.length){
-                console.log(queue.length);
-                let [x, y] = queue.take();
+            while(collection.data.length){
+                console.log(collection.length);
+                let [x, y] = collection.take();
                 console.log(x,y)
 
                 if(x === end[0] && y === end[1]){
