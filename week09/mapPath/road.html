@@ -36,7 +36,68 @@
     // 如果把直线距离作为启发函数最小的点，一定能找到最短路径。
     // 需要新数据结构，每次吐出最小的点，应该用二叉堆，binary heap
     // 先用无序数组
-        class Sorted {
+
+    // BinaryHeap 用数组表示二叉树
+
+    class BinaryHeap{
+        constructor(data, compare) {
+                this.data = data.slice();
+                this.compare = compare || ((a, b) => a - b)
+            }
+
+            // read
+            take() {
+                if (!this.data.length)
+                    return;
+                let min = this.data[0];
+                let i = 0;
+                // heap
+                while(i < this.data.length){
+                    if(i * 2 +1 >= this.tata.length)
+                        break;
+                    if(i * 2 +2 >= this.data.length){
+                        i = i * 2 + 1;
+                        break;
+                    }
+                    if(this.compare(this.data[i * 2 +1],this.data[i * 2+ 2]) < 0){
+                        this.data[i] = this.data[i * 2 + 1];
+                        i = i * 2 + 1;
+                    }else{
+                        this.data[i] = this.data[i * 2 + 2];
+                        i = i * 2 + 2;
+                    }
+                    
+                }
+                if( i < this.data.length-1){
+                    // 如果最后一层有空洞不在heap data最后的位置，那么把最后一个挪到空洞位置。
+                    this.insertAt(i, this.data.pop());
+                }else{
+                    // 如果空洞在heap data最后位置，那直接把这个空洞删除掉即可。
+                    this.data.pop();
+                }
+                return min;
+            }
+
+            insertAt(i,v){
+                this.data[i] = v;
+                while(i > 0 && this.compare(v , this.data[Math.floor((i-1)/2)])<0){
+                    this.data[i] = this.data[Math.floor((i-1)/2)];
+                    this.data[Math.floor((i-1)/2)] = v;
+
+                    i = Math.floor((i-1)/2);// 位置切换到父级位置继续循环
+
+                }
+            }
+            // write
+            insert(v) {
+                this.insertAt(this.data.length,v)
+            }
+
+            get length(){
+               return  this.data.length;
+            }
+    }
+    class Sorted {
             constructor(data, compare) {
                 this.data = data.slice();
                 this.compare = compare || ((a, b) => a - b)
@@ -62,11 +123,15 @@
             }
 
             // write
-            give(v) {
+            insert(v) {
                 this.data.push(v);
             }
 
-        }
+            get length(){
+               return  this.data.length;
+            }
+
+    }
 
         let map = localStorage["map"] ? JSON.parse(localStorage["map"]) : Array(10000).fill(0);
         // console.log(map);
@@ -102,10 +167,10 @@
         let clear = false;
         //检查是不是右键
         document.addEventListener("mousedown", e => {
-            console.log(e.clientX, e.clientY);
+            // console.log(e.clientX, e.clientY);
             mousedown = true;
             clear = (e.which === 3);
-            console.log(e.which);
+            // console.log(e.which);
 
         });
 
@@ -122,9 +187,9 @@
         async function findPath(map, start, end) {
             // 克隆map
             let table = Object.create(map);
-            var queue = new Sorted([start],(a, b) => distance(a) - distance(b));
+            var collection = new Sorted([start],(a, b) => distance(a) - distance(b));
 
-            container.children[100 * start[1] + start[0]].style.backgroundColor = "blue";
+            container.children[100 * start[1] + start[0]].style.backgroundColor = "red";
             container.children[100 * end[1] + end[0]].style.backgroundColor = "red";
 
             async function insert(x, y, pre){
@@ -133,19 +198,19 @@
                 if(table[y * 100 +x])
                     return;
                 
-                await sleep(30);
+                await sleep(1);
                 container.children[y * 100 + x].style.backgroundColor ="lightgreen";
                 table[y * 100 + x ] = pre;
-                queue.give([x,y]);
+                collection.insert([x,y]);
             }
 
             function distance(point){
                 return (point[0] - end[0]) ** 2 + (point[1]- end[1]) ** 2;
             }
-            // console.log(queue.length)
-            while(queue.data.length){
-                console.log(queue.length);
-                let [x, y] = queue.take();
+            console.log(collection.length)
+            while(collection.length){
+                console.log(collection.length);
+                let [x, y] = collection.take();
                 console.log(x,y)
 
                 if(x === end[0] && y === end[1]){
@@ -159,18 +224,19 @@
                     return path;
 
                 }
-
+                // 直线
                await  insert(x-1, y ,[x ,y]);
                await  insert(x, y-1,[x ,y]);
                await  insert(x, y+1,[x ,y]);
                await  insert(x+1, y,[x ,y]);
 
+                // 斜线
                await  insert(x-1, y-1 ,[x ,y]);
                await  insert(x+1, y-1,[x ,y]);
                await  insert(x-1, y+1,[x ,y]);
                await  insert(x+1, y+1,[x ,y]);
             }
-            return false;
+            return null;
         }
 
     </script>
