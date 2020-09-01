@@ -28,43 +28,47 @@
 <body>
     <div id="container"></div>
     <button onclick="localStorage['map'] = JSON.stringify(map)">save</button>
- 
+    <button onclick="delete localStorage.map; location.reload();">clear</button>&emsp;
+    <button onclick="findPath(map,[0,0],[50,50])">findPath</button>
     <script>
         /*
         *Sorted
         */
-        class Sorted{
-            constructor(data,compare){
+        class Sorted {
+            constructor(data, compare) {
                 this.data = data.slice();
-                this.compare = compare || ((a,b) => a - b)
+                this.compare = compare || ((a, b) => a - b)
             }
 
             // read
-            take(){
-                if(!this.data.length)
+            take() {
+                if (!this.data.length)
                     return;
                 let min = this.data[0];
                 let minIndex = 0;
                 // console.log( this.data.length)
-                for(let i = 1; i <this.data.length ; i++){
-                    if(this.compare(this.data[i],min) < 0){
-                        min  = this.data[i];
+                for (let i = 1; i < this.data.length; i++) {
+                    if (this.compare(this.data[i], min) < 0) {
+                        min = this.data[i];
                         minIndex = i;
                     }
                 }
 
-                this.data[minIndex] = this.data[this.data.length -1];
+                this.data[minIndex] = this.data[this.data.length - 1];
                 this.data.pop();
                 return min;
             }
 
             // write
-            give(v){
+            insert(v) {
                 this.data.push(v);
             }
 
-        }
+            get length(){
+               return  this.data.length;
+            }
 
+    }
         let map = localStorage["map"] ? JSON.parse(localStorage["map"]): Array(10000).fill(0);
         // console.log(map);
 
@@ -132,7 +136,7 @@
                 await sleep(5);
                 container.children[y * 100 + x].style.backgroundColor ="lightgreen";
                 table[y * 100 + x ] = pre;
-                queue.give([x,y]);
+                queue.insert([x,y]);
             }
 
            function distance(point){
@@ -164,7 +168,8 @@
             }
             return null;
         }
-        let s = new Sorted([3,6,4,7,8,9,1,0,5])
+      
+     
     </script>
 </body>
 </html>
