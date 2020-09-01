@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <style>
     .cell{
@@ -23,6 +24,43 @@
 <button onclick="findPath(map,[0,0],[50,50])">findPath</button>
 <script>
     // A star 启发式搜索
+=======
+
+ <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>寻路算法</title>
+    <style>
+        .cell {
+            width: 6px;
+            height: 6px;
+            background-color: gray;
+            border-bottom: 1px solid #fff;
+            border-right: 1px solid #FFF;
+            vertical-align: top;
+
+
+
+        }
+
+        #container {
+            width: 701px;
+            display: flex;
+            flex-wrap: wrap;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container"></div>
+    <button onclick="localStorage['map'] = JSON.stringify(map)">save</button>
+
+    <script>
+      // A star 启发式搜索
+>>>>>>> a31753acb825a26cb2bde42ed038812c6b1662f9
     // 如果把直线距离作为启发函数最小的点，一定能找到最短路径。
     // 需要新数据结构，每次吐出最小的点，应该用二叉堆，binary heap
     // 先用无序数组
