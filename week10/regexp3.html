@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>regexp</title>
+</head>
+<body>
+    <script>
+         //正则表达式中不能随意添加空格
+        let regExp =/([0-9\.]+)|([ \t]+)|([\r\n]+)|(\*)|(\/)|(\+)|(\-)/g;
+
+        let dictionary = ["Number", "Whitespace",  "LineTerminator", "*", "/", "+", "-"];
+
+        function* tokenize(source){
+            let result = null;
+            //解决匹配的长度和前进的长度不一样
+            let lastIndex =0; 
+
+            while(true){
+                lastIndex = regExp.lastIndex;
+                result =regExp.exec(source);
+
+                if(!result) break;
+
+                if(regExp.lastIndex - lastIndex > result[0].length) break;
+
+                let token = {
+                    type:null,
+                    value:null
+                }
+
+                for(var i = 1; i<dictionary.length; i++){
+                    if(result[i])
+                        token.type = dictionary[i - 1];
+                }
+                token.value = result[0];
+                yield token;
+            }
+            yield{
+                type:"EOF"
+            }
+        }
+
+        let source = [];
+
+        for (let token of tokenize("10 * 25 / 5")){
+           if(token.type !== "Whitespace" && token.type !== "LineTerminator")
+                source.push(token);
+        };
+
+        function Expresson(tokens){
+
+        }
+        function AdditiveExpression(source){
+
+        }
+
+        function MutiplicativeExpression(source){
+            // console.log(source);
+            if(source[0].type == "Number"){
+                let node = {
+                    type:"MutiplicativeExpression",
+                    children:[source[0]]
+                }
+
+                source[0] = node;
+
+                return MutiplicativeExpression(source);
+            }
+
+            if(source[0].type == "MutiplicativeExpression" && source[1] && source[1].type === "*"){
+                let node ={
+                    type:"MutiplicativeExpression",
+                    operator:"*",
+                    children:[]
+                }
+
+                node.children.push(source.shift());
+                node.children.push(source.shift());
+                node.children.push(source.shift());
+
+                source.unshift(node);
+                return MutiplicativeExpression(source);
+            }
+
+            if(source[0].type == "MutiplicativeExpression" && source[1] && source[1].type === "/"){
+                let node ={
+                    type:"MutiplicativeExpression",
+                    operator:"/",
+                    children:[]
+                }
+                // shift()	删除并返回数组的第一个元素
+                // unshift()	向数组的开头添加一个或更多元素，并返回新的长度。
+                node.children.push(source.shift());
+                node.children.push(source.shift());
+                node.children.push(source.shift());
+
+                source.unshift(node);
+                return MutiplicativeExpression(source);
+            }
+            if(source[0].type === "MutiplicativeExpression")
+                return source[0];
+
+            return MutiplicativeExpression(source);
+
+        }  
+
+        // MutiplicativeExpression("10 * 25");
+
+        console.log(MutiplicativeExpression( source ));
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>regexp</title>
+</head>
+<body>
+    <script>
+         //正则表达式中不能随意添加空格
+        let regExp =/([0-9\.]+)|([ \t]+)|([\r\n]+)|(\*)|(\/)|(\+)|(\-)/g;
+
+        let dictionary = ["Number", "Whitespace",  "LineTerminator", "*", "/", "+", "-"];
+
+        function* tokenize(source){
+            let result = null;
+            //解决匹配的长度和前进的长度不一样
+            let lastIndex =0; 
+
+            while(true){
+                lastIndex = regExp.lastIndex;
+                result =regExp.exec(source);
+
+                if(!result) break;
+
+                if(regExp.lastIndex - lastIndex > result[0].length) break;
+
+                let token = {
+                    type:null,
+                    value:null
+                }
+
+                for(var i = 1; i<dictionary.length; i++){
+                    if(result[i])
+                        token.type = dictionary[i - 1];
+                }
+                token.value = result[0];
+                yield token;
+            }
+            yield{
+                type:"EOF"
+            }
+        }
+
+        let source = [];
+
+        for (let token of tokenize("1 + 3 ）* 5 / 2 + 1 ")){
+           if(token.type !== "Whitespace" && token.type !== "LineTerminator")
+                if(token.type == "(")
+                source.push(token);
+        };
+        
+
+        // for (let token of tokenize("1 + 10 * 25 / 5 + 3")){
+        //    if(token.type !== "Whitespace" && token.type !== "LineTerminator")
+        //         source.push(token);
+        // };
+         /*parentheses 
+            （1 + 3 ）* 5 / 2 + 1 
+            */
+        function Expresson(tokens){
+            if(source[0].type === "AdditiveExpression" && source[1] && source[1].type === "EOF"){
+                let node = {
+                    type:"Expresson",
+                    children:[source.shift(),source.shift()]
+                }
+                source.unshift(node);
+                return node;
+            }
+            AdditiveExpression(source);
+            return Expresson(source);
+        }
+        /*
+        加法运算产生式
+        <AdditiveExpression> ::=
+            <MultiplicativeExpression>
+            | <AdditiveExpression> <+> <MultiplicativeExpression>
+            | <AdditiveExpression> <-> <MultiplicativeExpression>
+        把<MultiplicativeExpression>展开后：
+        <AdditiveExpression> ::=
+            <Number>
+            | <MultiplicativeExpression> <*> <Number>
+            | <MultiplicativeExpression> </> <Number>
+            | <AdditiveExpression> <+> <MultiplicativeExpression>
+            | <AdditiveExpression> <-> <MultiplicativeExpression>
+        */
+        function AdditiveExpression(source){
+            if(source[0].type ===  "MutiplicativeExpression"){
+                let node = {
+                    type:"AdditiveExpression",
+                    children:[source[0]]
+                }
+                source[0] = node;
+                
+                return AdditiveExpression(source);
+            }
+
+            if(source[0].type === "AdditiveExpression" && source[1] && source[1].type === "+"){
+                let node = {
+                    type: "AdditiveExpression",
+                    operator: "+",
+                    children:[]
+                }
+
+                node.children.push(source.shift());
+                node.children.push(source.shift());
+                MutiplicativeExpression(source);
+                node.children.push(source.shift());
+                source.unshift(node);
+                return AdditiveExpression(source);
+            }
+            if(source[0].type === "AdditiveExpression" && source[1] && source[1].type === "-"){
+                let node = {
+                    type: "AdditiveExpression",
+                    operator: "-",
+                    children:[]
+                }
+
+                node.children.push(source.shift());
+                node.children.push(source.shift());
+                MutiplicativeExpression(source);
+                node.children.push(source.shift());
+                source.unshift(node);
+                return AdditiveExpression(source);
+            }
+
+            if(source[0].type === "AdditiveExpression")
+                return source[0];
+            
+            // 第一次进入 AdditiveExpression 时  会进入到这个分支 number MutiplicativeExpression 没有完全执行
+            MutiplicativeExpression(source);
+            return AdditiveExpression(source);
+
+        }
+        /*
+        乘法产生式
+        <MultiplicativeExpression> ::=
+            <Number>
+            | <MultiplicativeExpression> <*> <Number>
+            | <MultiplicativeExpression> </> <Number>
+        */
+        function MutiplicativeExpression(source){
+            // console.log(source);
+            if(source[0].type == "Number"){
+                let node = {
+                    type:"MutiplicativeExpression",
+                    children:[source[0]]
+                }
+
+                source[0] = node;
+
+                return MutiplicativeExpression(source);
+            }
+
+            if(source[0].type == "MutiplicativeExpression" && source[1] && source[1].type === "*"){
+                let node ={
+                    type:"MutiplicativeExpression",
+                    operator:"*",
+                    children:[]
+                }
+
+                node.children.push(source.shift());
+                node.children.push(source.shift());
+                node.children.push(source.shift());
+
+                source.unshift(node);
+                return MutiplicativeExpression(source);
+            }
+
+            if(source[0].type == "MutiplicativeExpression" && source[1] && source[1].type === "/"){
+                let node ={
+                    type:"MutiplicativeExpression",
+                    operator:"/",
+                    children:[]
+                }
+                // shift()	删除并返回数组的第一个元素
+                // unshift()	向数组的开头添加一个或更多元素，并返回新的长度。
+                node.children.push(source.shift());
+                node.children.push(source.shift());
+                node.children.push(source.shift());
+
+                source.unshift(node);
+                return MutiplicativeExpression(source);
+            }
+            if(source[0].type === "MutiplicativeExpression")
+                return source[0];
+
+            return MutiplicativeExpression(source);
+
+        }  
+
+        // MutiplicativeExpression("10 * 25");
+        // console.log(AdditiveExpression( source ));
+        //  console.log(Expresson(source));
+       
+
+    </script>
+</body>
+</html>
