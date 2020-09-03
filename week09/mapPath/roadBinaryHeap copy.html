@@ -165,7 +165,7 @@
         table[start[1] * 100 + start[0]] = 0;
 
         function distance([x, y]){
-            return Math.sqrt((x - end[0]) ** 2 + (y - end[1]) ** 2); // 因为只需要比较大小，所以不需要开根号
+            return (x - end[0]) ** 2 + (y - end[1]) ** 2; // 因为只需要比较大小，所以不需要开根号
         }
 
         let collection = new BinaryHeap([start], (a, b) => distance(a) - distance(b)); // 比较距离终点更近的点
