@@ -1,2 +1,0 @@
-toastLog(app.versionCode);
-
