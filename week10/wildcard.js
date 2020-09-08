@@ -1,18 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>字符串分析算法 | Wildcard</title>
-</head>
-<body>
-    <script>
-        /*
-        wildcard : ab*cc?d*abc*a?d
-            只有* ：ab*cd*abca?d
-            只有？：c?d, a?d
-        */
-        function find(source, pattern){
+function find(source, pattern){
     let startcount = 0;
     for (let i =0; i< pattern.length; i++){
         if(pattern[i] === "*"){
@@ -63,10 +49,4 @@
     return true;   
 }
 
-// console.log(find("abcabcabxcaac","a*b*bx*c"));
-console.log(find("abcabcabxcaac","a*b?*b?x*c"));
-
-
-    </script>
-</body>
-</html>
+console.log(find("abcabcabxcaac","a*b*bx*c"));
