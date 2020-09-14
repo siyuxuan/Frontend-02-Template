@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>使用range拖拽 普通拖拽</title>
+    <style>
+        #dragable{
+            width:100px;
+            height: 100px;
+            background-color: #f00f00;
+        }
+    </style>
+</head>
+<body>
+    <div id="dragable"></div>
+    <script>
+        let dragable = document.getElementById("dragable");
+        //已经有的translate变量 
+        let baseX = 0, baseY =0;
+        dragable.addEventListener("mousedown", (event) => {
+            //第一次移动 开始起点坐标 
+            let startX = event.clientX, startY = event.clientY;
+            let up = (event) => {
+                baseX = baseX + event.clientX - startX;
+                baseY = baseY + event.clientY - startY;
+                console.log('baseX:' + baseX + ' baseY:' + baseY );
+                // document.removeEventListener('mousemove',move)
+                //  document.removeEventListener('mouseup',up)
+                document.removeEventListener("mousemove", move)
+                document.removeEventListener("mouseup", up)
+               
+            }
+
+            let move = event =>{
+            //    console.log(event);
+            dragable.style.transform = `translate(${baseX + event.clientX - startX }px,${baseY + event.clientY - startY }px)`;
+            }
+
+            document.addEventListener('mousemove',move)
+            document.addEventListener('mouseup',up)
+          
+        })
+    </script>
+</body>
+</html>

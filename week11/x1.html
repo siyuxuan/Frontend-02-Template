@@ -1,0 +1,27 @@
+
+<div id="dragable" style="display:inline-block;margin-left:81px;width:100px;height:100px;background-color:pink;"></div>
+<script>
+   let dragable = document.getElementById('dragable')
+   let baseX = 0,baseY = 0;//已经有的translate变量 
+   dragable.addEventListener('mousedown',function(event){
+      let startX = event.clientX,startY = event.clientY;//第一次移动 开始起点坐标 
+      let up = (event)=>{
+         baseX = baseX + event.clientX - startX 
+         baseY = baseY + event.clientY - startY 
+         console.log('baseX:' + baseX + ' baseY:' + baseY )
+         document.removeEventListener('mousemove',move)
+         document.removeEventListener('mouseup',up)
+      }
+      let move = (event)=>{
+          dragable.style.transform = `translate(${baseX + event.clientX - startX }px,${baseY + event.clientY - startY }px)`
+         // let range = getNearest(event.clientX,event.clientY)
+         // range.insertNode(dragable)
+      }
+      document.addEventListener('mousemove',move)
+      document.addEventListener('mouseup',up)
+   })
+  
+
+
+
+</script>
