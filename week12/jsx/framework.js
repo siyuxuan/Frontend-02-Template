@@ -1,4 +1,4 @@
- function createElement(type, attributes,...children){
+ export function createElement(type, attributes,...children){
     let element;
     if(typeof type === "string"){
        // element = document.createElement(type);
@@ -22,10 +22,11 @@
   }
 
 //   提取公共部分
-class Component{
+export class Component{
     constructor(type){
-        this.root = this.render();
+
     }
+    
     setAttribute(name, value){
         this.root.setAttribute(name, value);
        
@@ -46,7 +47,7 @@ class Component{
   }
   
   
-  class TextWrapper  extends Component {
+   class TextWrapper  extends Component {
        constructor(child){
             this.root = document.createTextNode(child);
        }

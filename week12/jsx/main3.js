@@ -26,45 +26,15 @@ class Carousel extends Component{
 
             this.root.appendChild(child);
         }
-        /* let currentIndex = 0;
-        // 自动播放
-       setInterval(() =>{
+        let current = 0;
+        setInterval(() =>{
             let children = this.root.children;
-            let nextIndex = (currentIndex + 1) % children.length;
-
-            let current = children[currentIndex];
-            let next = children[nextIndex];
-
-            // 正确位置
-            next.style.transition ="none";
-            next.style.transform = `translateX(${100 - nextIndex * 100}%)`;
-
-            setTimeout(() => {
-                next.style.transition ="";
-                current.style.transform = `translateX(${100 - nextIndex*100}%)`;
-                next.style.transform = `translateX(${ - nextIndex * 100}%)`;
-                currentIndex = nextIndex;
-            }, 16);
-            
-        },3000)*/
-        this.root.addEventListener("mousedown", event =>{
-            console.log("mousedown")
-            let move = event=>{
-                console.log("mousemove")
+            ++current;
+            current = current % children.length;
+            for(let child of children){
+                child.style.transform =`translateX(-${current * 100}%)`;
             }
-
-            let up = event=>{
-                console.log("mouseup");
-                document.removeEventListener("mousemove", move);
-                document.removeEventListener("mouseup", up);
-            }
-
-            document.addEventListener("mousemove", move)
-            documentß.addEventListener("mouseup", up)
-            
-        })
-       
-
+        },3000)
         return this.root;
     }
     mountTo(parent){

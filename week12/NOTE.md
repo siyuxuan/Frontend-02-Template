@@ -57,3 +57,34 @@ sudo cnpm install --save-dev @babel/plugin-transform-react-jsx
 ```
 plugins: [["@babel/plugin-transform-react-jsx",{pragma:"createElement"}]]
 ```
+
+tips：
+如果main.js中
+```ruby
+let e = <Div id ="test">
+     <span>a</span>
+     <span>b</span>
+     <span>c</span>
+</Div>
+```
+现行的浏览器中，我们是做一个这个接口去是解决这个问题的 具体的参见main.js
+
+tips：配置webpack-dev-server：
+a. webpack-dev-server简介：
+
+是一个小型node.js express服务器
+新建一个开发服务器，可以serve我们pack以后的代码，并且当代码更新的时候自动刷新浏览器
+启动webpack-dev-server后，你在目标文件夹中是看不到编译后的文件的，实时编译后的文件都保存到了内存当中。
+两种自动刷新方式：
+iframe mode
+在网页中嵌入了一个 iframe ，将我们自己的应用注入到这个 iframe 当中去，因此每次你修改的文件后，都是这个 iframe 进行了 reload
+命令行：webpack-dev-server，无需--inline
+浏览器访问：http://localhost:8080/webpack-dev-server/index.html
+inline mode
+命令行：webpack-dev-server --inline
+浏览器访问：http://localhost:8080
+b. 安装webpack-dev-server
+npm install webpack-dev-server --save-dev
+可在项目根目录下安装（不加-g，在项目根目录出现node_modules文件夹，内含webpack-dev-server及其依赖包），也可全局安装（加-g 必须sudo）
+
+c. 在webpack.config.js中添加配置
