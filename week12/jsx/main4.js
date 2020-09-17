@@ -10,6 +10,8 @@ class Carousel extends Component{
         this.attributes[name] = value;
     }
     render(){
+        // console.log(this.attributes.src);
+        // return document.createElement("div");
         // 渲染
         this.root = document.createElement("div");
         this.root.classList.add("carousel");
@@ -19,7 +21,8 @@ class Carousel extends Component{
             // child.src = record;
             let child = document.createElement("div");
             child.style.backgroundImage = `url('${record}')`;
-
+            // console.log(`url('${record}')`);
+            // child.style.display = "none";
 
             this.root.appendChild(child);
         }
@@ -45,39 +48,27 @@ class Carousel extends Component{
             
         },3000)*/
         // positon
-        let positon = 0;
+        let pos = 0;
         this.root.addEventListener("mousedown", event =>{
             let children = this.root.children;
             let startX = event.clientX;
 
             let move = event => {
                 let x = event.clientX - startX;
-                let current = positon - Math.round((x - x % 500)/500) ;
-                for (let offset of [-2, -1, 0 , 1, 2]){
-                    let pos = current + offset;
-                    pos = (pos + children.length) % children.length;
-
-                    children[pos].style.transition = "none";
-                    children[pos].style.transform = `translateX(${-pos * 500 + offset * 500 + x % 500}px)`;
-
+                for(let child of children){
+                    child.style.transition = "none";
+                    child.style.transform = `translateX(-${pos * 500 + x}px)`;
                 }
-
-                
             }  
 
             let up = event=>{
                 let x = event.clientX - startX;
-                positon = positon - Math.round(x / 500);
-
-                for (let offset of [0, -Math.sign(Math.round(x / 500) - x + 250 * Math.sign(x))]){
-                    let pos = positon + offset;
-                    pos = (pos + children.length) % children.length;
-
-                    children[pos].style.transition = "";
-                    children[pos].style.transform = `translateX(${-pos * 500 + offset * 500 }px)`;
-
+                console.log(x);
+                pos = pos - Math.round(x / 500);
+                for(let child of children){
+                    child.style.transition = "";
+                    child.style.transform = `translateX(-${pos * 500}px)`;
                 }
-               
                 document.removeEventListener("mousemove", move);
                 document.removeEventListener("mouseup", up);
             }
