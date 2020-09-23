@@ -8,9 +8,12 @@
 Properties(属性） Attribute(特性 
 
 ## jsx 环境配置
-`1 新建jsx目录 执行npm init  
-2、可以使用npx直接使用webpack，也可以使用全局安装webpack-cli的形式，这里王牌采用的是后者:sudo cnpm  install -g webpack webpack-cli
-3、安装babel-loader 
+1 新建jsx目录 执行npm init  
+2、可以使用npx直接使用webpack，也可以使用全局安装webpack-cli的形式，这里采用的是后者:
+    sudo cnpm  install -g webpack webpack-cli 
+    sudo cnpm  install -g --save-dev webpack
+
+3、安装babel-loader  安装到本地目录
 sudo cnpm install --save-dev webpack babel-loader
 4、新建webpack.config.js
 ```ruby

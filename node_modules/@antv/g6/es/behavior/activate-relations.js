@@ -1,0 +1,175 @@
+export default {
+  getDefaultCfg: function getDefaultCfg() {
+    return {
+      trigger: 'mouseenter',
+      activeState: 'active',
+      inactiveState: 'inactive',
+      resetSelected: false,
+      shouldUpdate: function shouldUpdate() {
+        return true;
+      }
+    };
+  },
+  getEvents: function getEvents() {
+    if (this.get('trigger') === 'mouseenter') {
+      return {
+        'node:mouseenter': 'setAllItemStates',
+        'node:mouseleave': 'clearActiveState'
+      };
+    }
+
+    return {
+      'node:click': 'setAllItemStates',
+      'canvas:click': 'clearAllItemStates'
+    };
+  },
+  setAllItemStates: function setAllItemStates(e) {
+    var item = e.item;
+    var graph = this.graph;
+    this.item = item;
+
+    if (!this.shouldUpdate(e.item, {
+      event: e,
+      action: 'activate'
+    })) {
+      return;
+    }
+
+    var self = this;
+    var activeState = this.activeState;
+    var inactiveState = this.inactiveState;
+    var nodes = graph.getNodes();
+    var edges = graph.getEdges();
+    var nodeLength = nodes.length;
+    var edgeLength = edges.length;
+
+    for (var i = 0; i < nodeLength; i++) {
+      var node = nodes[i];
+      var hasSelected = node.hasState('selected');
+
+      if (self.resetSelected) {
+        if (hasSelected) {
+          graph.setItemState(node, 'selected', false);
+        }
+      }
+
+      graph.setItemState(node, activeState, false);
+
+      if (inactiveState) {
+        graph.setItemState(node, inactiveState, true);
+      }
+    }
+
+    for (var i = 0; i < edgeLength; i++) {
+      var edge = edges[i];
+      graph.setItemState(edge, activeState, false);
+
+      if (inactiveState) {
+        graph.setItemState(edge, inactiveState, true);
+      }
+    }
+
+    if (inactiveState) {
+      graph.setItemState(item, inactiveState, false);
+    }
+
+    graph.setItemState(item, activeState, true);
+    var rEdges = item.getEdges();
+    var rEdgeLegnth = rEdges.length;
+
+    for (var i = 0; i < rEdgeLegnth; i++) {
+      var edge = rEdges[i];
+      var otherEnd = void 0;
+
+      if (edge.getSource() === item) {
+        otherEnd = edge.getTarget();
+      } else {
+        otherEnd = edge.getSource();
+      }
+
+      if (inactiveState) {
+        graph.setItemState(otherEnd, inactiveState, false);
+      }
+
+      graph.setItemState(otherEnd, activeState, true);
+      graph.setItemState(edge, inactiveState, false);
+      graph.setItemState(edge, activeState, true);
+      edge.toFront();
+    }
+
+    graph.emit('afteractivaterelations', {
+      item: e.item,
+      action: 'activate'
+    });
+  },
+  clearActiveState: function clearActiveState(e) {
+    var self = this;
+    var graph = self.get('graph');
+
+    if (!self.shouldUpdate(e.item, {
+      event: e,
+      action: 'deactivate'
+    })) {
+      return;
+    }
+
+    var activeState = this.activeState;
+    var inactiveState = this.inactiveState;
+    var autoPaint = graph.get('autoPaint');
+    graph.setAutoPaint(false);
+    var nodes = graph.getNodes();
+    var edges = graph.getEdges();
+    var nodeLength = nodes.length;
+    var edgeLength = edges.length;
+
+    for (var i = 0; i < nodeLength; i++) {
+      var node = nodes[i];
+      graph.clearItemStates(node, [activeState, inactiveState]);
+    }
+
+    for (var i = 0; i < edgeLength; i++) {
+      var edge = edges[i];
+      graph.clearItemStates(edge, [activeState, inactiveState, 'deactivate']);
+    }
+
+    graph.paint();
+    graph.setAutoPaint(autoPaint);
+    graph.emit('afteractivaterelations', {
+      item: e.item || self.get('item'),
+      action: 'deactivate'
+    });
+  },
+  clearAllItemStates: function clearAllItemStates(e) {
+    var self = this;
+    var graph = self.graph;
+
+    if (!self.shouldUpdate(e.item, {
+      event: e,
+      action: 'deactivate'
+    })) {
+      return;
+    }
+
+    var activeState = this.activeState;
+    var inactiveState = this.inactiveState;
+    var nodes = graph.getNodes();
+    var edges = graph.getEdges();
+    var nodeLength = nodes.length;
+    var edgeLength = edges.length;
+
+    for (var i = 0; i < nodeLength; i++) {
+      var node = nodes[i];
+      graph.clearItemStates(node, [activeState, inactiveState]);
+    }
+
+    for (var i = 0; i < edgeLength; i++) {
+      var edge = edges[i];
+      graph.clearItemStates(edge, [activeState, inactiveState, 'deactivate']);
+    }
+
+    graph.emit('afteractivaterelations', {
+      item: e.item || self.get('item'),
+      action: 'deactivate'
+    });
+  }
+};

@@ -1,0 +1,38 @@
+var adjMatrix = function adjMatrix(graph, directed) {
+  var nodes = graph.getNodes();
+  var edges = graph.getEdges();
+  var matrix = []; // map node with index in data.nodes
+
+  var nodeMap = {};
+
+  if (!nodes) {
+    throw new Error('invalid nodes data!');
+  }
+
+  if (nodes) {
+    nodes.forEach(function (node, i) {
+      nodeMap[node.getID()] = i;
+      var row = [];
+      matrix.push(row);
+    });
+  }
+
+  if (edges) {
+    edges.forEach(function (e) {
+      var model = e.getModel();
+      var source = model.source,
+          target = model.target;
+      var sIndex = nodeMap[source];
+      var tIndex = nodeMap[target];
+      matrix[sIndex][tIndex] = 1;
+
+      if (!directed) {
+        matrix[tIndex][sIndex] = 1;
+      }
+    });
+  }
+
+  return matrix;
+};
+
+export default adjMatrix;

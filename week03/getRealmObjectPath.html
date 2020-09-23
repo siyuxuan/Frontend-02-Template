@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>打印realm对象路径</title>
+</head>
+<body>
+    
+<script>
+    var set = new Set();
+    // 队列
+    var globslProperties = [
+        "eval",
+        "isFinite",
+        "isNaN",
+        "parseFloat",
+        "parseInt",
+        "decodeURI",
+        "decodeURIComponent",
+        "encodeURI",
+        "encodeURIComponent",
+        "Array",
+        'Date',
+        "RegExp",
+        'Promise',
+        'Proxy',
+        "Map",
+        "WeakMap",
+        "Set",
+        "WeakSet",
+        "Function",
+        "Boolean",
+        "String",
+        "Number",
+        "Symbol",
+        "Object",
+        "Error",
+        "EvalError",
+        "RangeError",
+        "ReferenceError",
+        "SyntaxError",
+        "TypeError",
+        "URIError",
+        "ArrayBuffer",
+        "SharedArrayBuffer",
+        "DataView",
+        "Float32Array",
+        "Float64Array",
+        "Int8Array",
+        "Int16Array",
+        "Int32Array",
+        "Uint8Array",
+        "Uint16Array",
+        "Uint32Array",
+        "Uint8ClampedArray",
+        "Atomics",
+        "JSON",
+        "Math",
+        "Reflect"];
+
+    var queue=[];
+    for(var p of globslProperties){
+        queue.push({
+            path:[p],
+            object:this[p]
+        })
+    }
+    console.log(queue);
+   let current;
+   while(queue.length){
+        current =queue.shift();
+        // console.log(current.object);
+        // console.log(current.path.join('.'));
+        if(set.has(current.object))
+            continue;
+        set.add(current.object);
+        // console.log(current);
+        // Object.getOwnPropertyNames()方法返回一个由指定对象的所有自身属性的属性名（包括不可枚举属性但不包括Symbol值作为名称的属性）组成的数组。
+        for(let p of Object.getOwnPropertyNames(current.object)){
+            // Object.getOwnPropertyDescriptor() 方法返回指定对象上一个自有属性对应的属性描述符。
+            var property = Object.getOwnPropertyDescriptor(current.object,p);
+            console.log(property);
+            // if(p == "dotAll"){
+            //     debugger;
+            // }
+            // hasOwnProperty() 方法会返回一个布尔值，指示对象自身属性中是否具有指定的属性（也就是，是否有指定的键）
+            if((property.hasOwnProperty('value')) && 
+               ( ((property.value != null) && (typeof property.value == "object"))|| 
+               (typeof property.value == "function"))
+                && property.value instanceof Object){
+            queue.push({
+                path:current.path.concat([p]),
+                object:property.value,
+            });
+            }
+            if(property.hasOwnProperty('get') && (typeof property.get == "function")){
+                // debugger;
+                queue.push({
+                    path:current.path.concat([p]),
+                    object:property.get,
+                });
+            }
+            
+            if(property.hasOwnProperty('set') && (typeof property.set == "function")){
+                // debugger;
+                queue.push({
+                    path:current.path.concat([p]),
+                    object:property.set,
+                });
+            }
+        }
+   }
+  
+</script>
+</body>
+</html>

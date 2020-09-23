@@ -1,0 +1,49 @@
+var dijkstra = function dijkstra(graph, source, directed, weightPropertyName) {
+  var nodes = graph.getNodes();
+  var nodeIdxMap = {};
+  var i, v;
+  var marks = [];
+  var D = [];
+  nodes.forEach(function (node, i) {
+    var id = node.getID();
+    nodeIdxMap[id] = i;
+    D[i] = Infinity;
+    if (id === source) D[i] = 0;
+  });
+  var nodeNum = nodes.length;
+
+  for (i = 0; i < nodeNum; i++) {
+    //Process the vertices
+    v = minVertex(D, nodeNum, marks);
+    if (D[v] === Infinity) return; //Unreachable vertices
+
+    marks[i] = true;
+    var relatedEdges = [];
+    if (!directed) relatedEdges = nodes[v].getOutEdges();else relatedEdges = nodes[v].getEdges();
+    relatedEdges.forEach(function (e) {
+      var w = nodeIdxMap[e.getTarget().getID()];
+      var weight = weightPropertyName && e.getModel()[weightPropertyName] ? e.getModel()[weightPropertyName] : 1;
+      if (D[w] > D[v] + weight) D[w] = D[v] + weight;
+    });
+  }
+
+  return D;
+};
+
+function minVertex(D, nodeNum, marks) {
+  var i, v;
+
+  for (i = 0; i < nodeNum; i++) {
+    //找没有被访问的点
+    if (marks[i] == false) v = i;
+    break;
+  }
+
+  for (i++; i < nodeNum; i++) {
+    //找比上面还小的未被访问的点（注意此时的i++）
+    if (!marks[i] && D[i] < D[v]) v = i;
+    return v;
+  }
+}
+
+export default dijkstra;
