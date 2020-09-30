@@ -42,6 +42,7 @@ element.addEventListener("touchcancel", event => {
 Touch还包含touchcancel事件，通常在系统弹窗打断或手势突然被识别为操作系统手势时触发。
 
 ## 把Mouse和Touch事件抽象到一起
+
 ![gesture_flow](https://github.com/siyuxuan/Frontend-02-Template/tree/master/week14/gesture_flow.png)
 手势事件演化： 
 touch事件最重要的属性touchEvent.changeTouches，是一个多触控点的类数组集合，包含单个的Touch，Touch.idetifier是触控的识别符，以便在touch事件各阶段标识每个触控点。
