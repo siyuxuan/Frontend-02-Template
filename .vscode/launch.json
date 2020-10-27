@@ -14,14 +14,34 @@
         //     "webRoot": "${workspaceFolder}"
         // }, "program": "${workspaceFolder}/week04/match state.js",
         // "program": "${workspaceFolder}/week05/toy-brower/client.
+        // week14
+        // {
+        //     "name": "Launch Program",
+        //     "program": "${workspaceFolder}/week14/gesture.html",
+        //     "request": "launch",
+        //     "skipFiles": [
+        //         "<node_internals>/**"
+        //     ],
+        //     "type": "pwa-node"
+        // }
+        // week17
         {
-            "name": "Launch Program",
-            "program": "${workspaceFolder}/week12/jsk/main.js",
+            
+            "type": "node",
             "request": "launch",
+            "name": "Launch Program",
             "skipFiles": [
                 "<node_internals>/**"
+            ], 
+            "runtimeArgs": [
+                "--require","@babel/register"
             ],
-            "type": "pwa-node"
+            "sourceMaps": true, 
+            "args": [
+
+            ],
+            "program": "${workspaceFolder}/week17/html-parser-unit/node_modules/.bin/mocha",
+           
         }
     ]
 }
