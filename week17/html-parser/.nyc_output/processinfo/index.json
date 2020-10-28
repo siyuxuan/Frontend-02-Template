@@ -1,0 +1,1 @@
+{"processes":{"dd45810d-4166-40f8-a620-9c1b3c371e83":{"parent":"fb6d952d-d9d1-459e-a9c0-22ae4cc30dc7","children":[]},"fb6d952d-d9d1-459e-a9c0-22ae4cc30dc7":{"parent":null,"children":["dd45810d-4166-40f8-a620-9c1b3c371e83"]}},"files":{"/Users/mediav/Frontend-02-Template/week17/html-parser/src/parser.js":["dd45810d-4166-40f8-a620-9c1b3c371e83"]},"externalIds":{}}
