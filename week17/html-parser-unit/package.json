@@ -2,7 +2,7 @@
   "name": "html-parser-unit",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "index.js", 
   "scripts": {
     "test": "mocha --require  @babel/register",
     "coverage": "nyc npm run test"
