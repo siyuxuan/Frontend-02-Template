@@ -6,18 +6,12 @@ let querystring = require('querystring');
 
 
 // 1、打开 https://github.com/login/oauth/authorize
-// 28c63a8b2683ea350155524787ee35d7278714e3
 // Client secret
-
 child_process.exec(`open https://github.com/login/oauth/authorize?client_id=Iv1.ef274e10fca31348`)
 //3、  创建server 接受token 点击发布
-// http.createServer(function(request , response){
-//     let query = querystring.parse(request.url.match(/^\/\?([\s\S]+)$/)[1]);
-//     console.log(query);
-
-// }).listen(8083)
 http.createServer(function (request, response) {
-    let query = querystring.parse(request.url.match(/^\/\?([\s\S]+)$/)[1])
+    let query = querystring.parse(request.url.match(/^\/\?([\s\S]+)$/)[1]);
+    console.log(query)
     publish(query.token);
 }).listen(8083);
 
@@ -26,8 +20,8 @@ function publish(token){
         hostname:"127.0.0.1",
         port:8082,
         method: 'POST',
-        path: "publish?token="+token,
-        headers:{
+        path: "/publish?token=" + token,
+        headers: {
             'Content-Type': 'application/octet-stream'
         }
     }, response =>{
@@ -35,9 +29,7 @@ function publish(token){
     })
 
     const archive = archiver('zip', {
-        zlib: {
-            level: 9
-        }
+        zlib: {level: 9 }
     });
     
     archive.directory('./sample/', false);
