@@ -39,16 +39,14 @@ function getToken(code, callback) {
 function publish(request, response){
     let query = querystring.parse(request.url.match(/^\/publish\?([\s\S]+)$/)[1]);
     getUser(query.token , info =>{
-        // if(info.login === "siyuxuan"){
-        //      request.pipe(unzipper.Extract({path: '../server/public/'}))
-        //      request.on('end', function() {
-        //         response.end('success!');
-        //     })
-        // }
-        request.pipe(unzipper.Extract({path: '../server/public/'}))
-        request.on('end', function() {
-           response.end('success!');})
-    });
+        if(info.login === "siyuxuan"){
+             request.pipe(unzipper.Extract({path: '../server/public/'}))
+             request.on('end', function() {
+                response.end('success!');
+            })
+        }
+
+})
 }
 
 function getUser(token,callback) {
@@ -63,7 +61,6 @@ function getUser(token,callback) {
       }
     }, function(response){
         let body = '';
-
         response.on('data', chunk => {
             body += (chunk.toString());
         })
