@@ -17,7 +17,7 @@ function auth(request, response){
 function getToken(code, callback) {
     let request = https.request({
       hostname: "github.com",
-      path: `/login/oauth/access_token?code=${code}&cilent_id=Iv1.ef274e10fca31348&client_secret=28c63a8b2683ea350155524787ee35d7278714e3`,
+      path: `/login/oauth/access_token?code=${code}&client_id=Iv1.ef274e10fca31348&client_secret=28c63a8b2683ea350155524787ee35d7278714e3`,
       port: 443,
       method: "POST",
     },function(response){
